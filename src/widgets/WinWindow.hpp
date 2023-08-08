@@ -21,6 +21,11 @@ public:
     inline bool isKeepOnTopEnable() const;
     inline bool isProblemGeometryEvent() const;
 
+Q_SIGNALS:
+    void minimizedState();
+    void maximizedState();
+    void fullscreenState();
+
 public Q_SLOTS:
     void changeFullscreenMode();
     bool setFullscreenMode(bool enable);
@@ -30,6 +35,7 @@ public Q_SLOTS:
 
 protected:
     void closeEvent(QCloseEvent * event) override;
+    bool event(QEvent * event) override;
 
 private:
     void _setKeepOnTopMode(bool enable);

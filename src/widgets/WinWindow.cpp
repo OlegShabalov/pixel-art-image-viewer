@@ -3,6 +3,7 @@
 #include <QSettings>
 #include <QApplication>
 #include <QDir>
+#include <QWindowStateChangeEvent>
 
 #include <windows.h>
 
@@ -116,6 +117,38 @@ void WinWindow::closeEvent(QCloseEvent * event) {
         _saveGeometry();
     }
     QWidget::closeEvent(event);
+}
+
+
+
+bool WinWindow::event(QEvent * event) {
+    if (event->type() != QEvent::WindowStateChange) {
+        return QWidget::event(event);
+    }
+
+    const QWindowStateChangeEvent * windowStateEvent =
+        static_cast<QWindowStateChangeEvent *>(event);
+
+    if (windowState() & Qt::WindowMinimized ||
+        windowStateEvent->oldState() & Qt::WindowMinimized)
+    {
+        Q_EMIT minimizedState();
+    }
+    else {
+        if (windowState() == Qt::WindowMaximized  ||
+            windowStateEvent->oldState() == Qt::WindowMaximized)
+        {
+            Q_EMIT maximizedState();
+        }
+
+        if (windowState() == Qt::WindowFullScreen  ||
+            windowStateEvent->oldState() == Qt::WindowFullScreen)
+        {
+            Q_EMIT fullscreenState();
+        }
+    }
+
+    return QWidget::event(event);
 }
 
 

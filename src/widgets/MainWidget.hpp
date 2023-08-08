@@ -36,8 +36,6 @@ protected:
     void resizeEvent(QResizeEvent * event) override;
     void moveEvent(QMoveEvent * event) override;
 
-    bool event(QEvent * event) override;
-
 private:
     static bool _keyMatches(const QKeySequence & seq, const QKeyEvent * event);
 

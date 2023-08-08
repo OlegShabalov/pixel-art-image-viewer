@@ -41,6 +41,19 @@ MainWidget::MainWidget(Application & application, int imageIndex)
     connect(&_imageLoader, &ImageLoader::finished,
             this, &MainWidget::_setImage);
 
+    connect(this, &WinWindow::maximizedState, this, [this](){
+        if (_config.fixImageWhenWindowMaximized) {
+            _current->fixImage();
+            update();
+        }
+    });
+    connect(this, &WinWindow::fullscreenState, this, [this](){
+        if (_config.fixImageWhenWindowFullScreen) {
+            _current->fixImage();
+            update();
+        }
+    });
+
     _current = new Image(_config);
 
     _loadImage(_application.imagePathName(_currentIndex));
@@ -297,36 +310,6 @@ void MainWidget::moveEvent(QMoveEvent *) {
     if (!isProblemGeometryEvent()) {
         _layout->widgetMove(mapFromGlobal(QCursor::pos()));
     }
-}
-
-bool MainWidget::event(QEvent * event) {
-    if (event->type() == QEvent::WindowStateChange) {
-        const QWindowStateChangeEvent * windowStateEvent =
-            static_cast<QWindowStateChangeEvent *>(event);
-
-        if (!((windowState() & Qt::WindowMinimized) ||
-            (windowStateEvent->oldState() & Qt::WindowMinimized)))
-        {
-            if (_config.fixImageWhenWindowMaximized) {
-                if (windowState() == Qt::WindowMaximized  ||
-                    windowStateEvent->oldState() == Qt::WindowMaximized)
-                {
-                    _current->fixImage();
-                    update();
-                }
-            }
-            if (_config.fixImageWhenWindowFullScreen) {
-                if (windowState() == Qt::WindowFullScreen  ||
-                    windowStateEvent->oldState() == Qt::WindowFullScreen)
-                {
-                    _current->fixImage();
-                    update();
-                }
-            }
-        }
-    }
-
-    return QWidget::event(event);
 }
 
 
