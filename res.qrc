@@ -1,0 +1,14 @@
+<RCC>
+    <qresource prefix="/icon">
+        <file alias="next">res/next.svg</file>
+        <file alias="previous">res/previous.svg</file>
+        <file alias="dots">res/dots.svg</file>
+        <file alias="fullScreen">res/fullScreen.svg</file>
+        <file alias="normalSize">res/normalSize.svg</file>
+        <file alias="folder">res/folder.svg</file>
+        <file alias="pause">res/pause.svg</file>
+        <file alias="play">res/play.svg</file>
+        <file alias="pin">res/pin.svg</file>
+        <file alias="unpin">res/unpin.svg</file>
+    </qresource>
+</RCC>
