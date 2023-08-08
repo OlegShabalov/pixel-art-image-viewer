@@ -15,24 +15,27 @@ public:
     };
 
 public:
-    bool useCursorAsScaleCenter = true;
-    char windowResizeStrategy = ScaleFragment;
+    ConfigItem();
 
-    bool enableGesturesToScroll = true;
+public:
+    bool useCursorAsScaleCenter;
+    char windowResizeStrategy;
 
-    int moveMarginInPixels = 20;
+    bool enableGesturesToScroll;
 
-    int maxPixelSize = 400;
-    int minImageSize = 100;
-    bool enableOneToOneScaling = true;
+    int moveMarginInPixels;
 
-    bool fixImageWhenWindowMaximized = true;
-    bool fixImageWhenWindowFullScreen = false;
+    int maxPixelSize;
+    int minImageSize;
+    bool enableOneToOneScaling;
 
-    bool enableHiding = true;
-    bool enableNormalazeFromMaximize = true;
+    bool fixImageWhenWindowMaximized;
+    bool fixImageWhenWindowFullScreen;
 
-    bool enableHidingHoveredButtons = false;
+    bool enableHiding;
+    bool enableNormalazeFromMaximize;
+
+    bool enableHidingHoveredButtons;
 
     /*
     bool useDecreasingBestSmooth = true;
@@ -40,26 +43,26 @@ public:
     bool useIncreasingSmooth = false;
     */
 
-    QColor buttonsBackgroundColor {25, 10, 15, 160};
+    QColor buttonsBackgroundColor;
 
-    float guiScale = 0.8;
+    float guiScale;
 
-    bool enablePictureCount = true;
+    bool enablePictureCount;
 
 
 
-    QKeySequence keyNext      {Qt::Key_Right, Qt::Key_D, Qt::Key_L};
-    QKeySequence keyPrevious  {Qt::Key_Left,  Qt::Key_A, Qt::Key_J};
-    QKeySequence keyScaleUp   {Qt::Key_Up, Qt::Key_W};
-    QKeySequence keyScaleDown {Qt::Key_Down, Qt::Key_S};
-    QKeySequence keyBrowse    {Qt::CTRL + Qt::Key_E};
-    QKeySequence keyChangeFullScreenState {Qt::Key_F};
-    QKeySequence keyScreenStateDown       {Qt::Key_Escape};
-    QKeySequence keyPinOnTop  {Qt::Key_P};
-    QKeySequence keyChangePaused  {Qt::Key_Space, Qt::Key_K};
-    QKeySequence keyNextFrame     {Qt::Key_Period};
-    QKeySequence keyPreviousFrame {Qt::Key_Comma};
-    QKeySequence keyClose {Qt::CTRL + Qt::Key_Q};
+    QKeySequence keyNext;
+    QKeySequence keyPrevious;
+    QKeySequence keyScaleUp;
+    QKeySequence keyScaleDown;
+    QKeySequence keyBrowse;
+    QKeySequence keyChangeFullScreenState;
+    QKeySequence keyScreenStateDown;
+    QKeySequence keyPinOnTop;
+    QKeySequence keyChangePaused;
+    QKeySequence keyNextFrame;
+    QKeySequence keyPreviousFrame;
+    QKeySequence keyClose;
 };
 
 
