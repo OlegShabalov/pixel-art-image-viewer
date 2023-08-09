@@ -53,6 +53,7 @@ void WinWindow::changeFullscreenMode() {
     if (isFullScreen()) {
         if (_isMaximizedBeforeFullScreen) {
             _isProblemGeometryEvent = true;
+            _ignoreMaximizedEvent = true;
             showMaximized();
             _isProblemGeometryEvent = false;
         }
@@ -77,10 +78,13 @@ void WinWindow::changeFullscreenMode() {
         }
         else {
             _isMaximizedBeforeFullScreen = false;
+
+            _isProblemFullscreenChangeEvent = true;
             //setVisible(false);
             showMaximized();
             QWidget::showFullScreen();
             //setVisible(true);
+            _isProblemFullscreenChangeEvent = false;
         }
     }
 }
@@ -135,16 +139,20 @@ bool WinWindow::event(QEvent * event) {
         Q_EMIT minimizedState();
     }
     else {
-        if (windowState() == Qt::WindowMaximized  ||
-            windowStateEvent->oldState() == Qt::WindowMaximized)
-        {
-            Q_EMIT maximizedState();
-        }
-
         if (windowState() == Qt::WindowFullScreen  ||
             windowStateEvent->oldState() == Qt::WindowFullScreen)
         {
             Q_EMIT fullscreenState();
+        }
+        else if (windowState() == Qt::WindowMaximized  ||
+                 windowStateEvent->oldState() == Qt::WindowMaximized)
+        {
+            if (_ignoreMaximizedEvent) {
+                _ignoreMaximizedEvent = false;
+            }
+            else if (!_isProblemFullscreenChangeEvent) {
+                Q_EMIT maximizedState();
+            }
         }
     }
 

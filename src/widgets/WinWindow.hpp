@@ -52,6 +52,8 @@ private:
     bool _isMaximizedBeforeFullScreen = false;
     bool _isKeepOnTopEnable = false;
     bool _isProblemGeometryEvent = false;
+    bool _isProblemFullscreenChangeEvent = false;
+    bool _ignoreMaximizedEvent = false;
 };
 
 

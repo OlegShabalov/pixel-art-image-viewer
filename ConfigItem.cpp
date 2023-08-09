@@ -11,13 +11,13 @@ ConfigItem::ConfigItem()
     , minImageSize(100)
     , enableOneToOneScaling(true)
 
-    , fixImageWhenWindowMaximized(true)
-    , fixImageWhenWindowFullScreen(false)
+    , fixImageWhenWindowMaximized(false)
+    , fixImageWhenWindowFullScreen(true)
 
     , enableHiding(true)
     , enableNormalazeFromMaximize(true)
-    , enableHidingHoveredButtons(false)
 
+    , enableHidingHoveredButtons(false)
     , buttonsBackgroundColor({25, 10, 15, 160})
     , guiScale(0.8)
 
