@@ -3,10 +3,10 @@
 #include <QPainter>
 #include <QFileInfo>
 #include <QDir>
-#include <QCollator>
 #include <QMouseEvent>
 #include <QMovie>
 #include <QProcess>
+#include <QShortcut>
 
 #include "Math.hpp"
 
@@ -53,6 +53,8 @@ MainWidget::MainWidget(Application & application, int imageIndex)
             update();
         }
     });
+
+    _createShortcuts();
 
     _current = new Image(_config);
 
@@ -206,89 +208,6 @@ void MainWidget::wheelEvent(QWheelEvent * event) {
 
 
 
-void MainWidget::keyPressEvent(QKeyEvent * event) {
-    if (_keyMatches(_config.keyNext, event)) {
-        _loadNext();
-        event->accept();
-        return;
-    }
-    if (_keyMatches(_config.keyPrevious, event)) {
-        _loadPrevious();
-        event->accept();
-        return;
-    }
-
-    if (_keyMatches(_config.keyScaleUp, event)) {
-        _stopDragging();
-        _current->scaleByWidgetCenter(1);
-        update();
-        event->accept();
-        return;
-    }
-    if (_keyMatches(_config.keyScaleDown, event)) {
-        _stopDragging();
-        _current->scaleByWidgetCenter(-1);
-        update();
-        event->accept();
-        return;
-    }
-
-    if (_keyMatches(_config.keyNextFrame, event)) {
-        _jumpToNextFrame();
-        event->accept();
-        return;
-    }
-    if (_keyMatches(_config.keyPreviousFrame, event)) {
-        _jumpToPreviousFrame();
-        event->accept();
-        return;
-    }
-
-    if (_keyMatches(_config.keyClose, event)) {
-        close();
-        event->accept();
-        return;
-    }
-
-    if (!event->isAutoRepeat()) {
-        if (_keyMatches(_config.keyChangeFullScreenState, event)) {
-            _changeFullScreen();
-            event->accept();
-            return;
-        }
-
-        if (_keyMatches(_config.keyScreenStateDown, event)) {
-            if (changeDownScreenMode(_config.enableNormalazeFromMaximize,
-                                     _config.enableHiding))
-            {
-                _stopDragging();
-                _layout->fullScreen->setSwitched(false);
-            }
-        }
-
-        if (_keyMatches(_config.keyChangePaused, event)) {
-            _setPaused(!_current->isPaused());
-            event->accept();
-            return;
-        }
-
-        if (_keyMatches(_config.keyPinOnTop, event)) {
-            _pinOnTop();
-            event->accept();
-            return;
-        }
-
-        if (_keyMatches(_config.keyBrowse, event)) {
-            _stopDragging();
-            _browseCurrentFile();
-        }
-    }
-
-    event->ignore();
-}
-
-
-
 void MainWidget::paintEvent(QPaintEvent *) {
     QPainter painter(this);
     _current->paint(painter);
@@ -310,60 +229,6 @@ void MainWidget::moveEvent(QMoveEvent *) {
     if (!isProblemGeometryEvent()) {
         _layout->widgetMove(mapFromGlobal(QCursor::pos()));
     }
-}
-
-
-
-bool MainWidget::_keyMatches(const QKeySequence & seq,
-                             const QKeyEvent * event)
-{
-    for (char i=0; i<seq.count(); ++i) {
-        if (seq[i] == (event->key() | static_cast<int>(event->modifiers()))) {
-            return true;
-        }
-    }
-    return false;
-}
-
-void MainWidget::_setTitle(bool error) {
-    QString title = "(";
-
-    if (_config.enablePictureCount) {
-        if (_application.imageListSize() == 0) {
-            title += '0';
-        }
-        else {
-            title += QString::number(_currentIndex + 1);
-        }
-        title += '/' + QString::number(_application.imageListSize()) + ") ";
-    }
-    if (error) {
-        title += "Error: ";
-    }
-
-    setWindowTitle(title + _application.imageName(_currentIndex));
-}
-
-void MainWidget::_stopDragging() {
-    if (_isDraggingImage) {
-        _isDraggingImage = false;
-        if (_draggingCursorEnable) {
-            unsetCursor();
-            _draggingCursorEnable = false;
-        }
-    }
-}
-
-
-
-void MainWidget::_loadImage(const QString & filePath) {
-    _setTitle();
-    setCursor(Qt::BusyCursor);
-
-    _current->clear();
-    _imageLoader.load(filePath);
-
-    update();
 }
 
 
@@ -420,6 +285,8 @@ void MainWidget::_changeFullScreen() {
 }
 
 void MainWidget::_browseCurrentFile() {
+    _stopDragging();
+
     const QString currentFilePath = _application.imagePathName(_currentIndex);
 
     const QFileInfo file(currentFilePath);
@@ -452,4 +319,114 @@ void MainWidget::_jumpToNextFrame() {
 void MainWidget::_jumpToPreviousFrame() {
     _current->jumpToPreviousFrame();
     _setPaused(_current->isPaused());
+}
+
+
+
+void MainWidget::_setTitle(bool error) {
+    QString title = "(";
+
+    if (_config.enablePictureCount) {
+        if (_application.imageListSize() == 0) {
+            title += '0';
+        }
+        else {
+            title += QString::number(_currentIndex + 1);
+        }
+        title += '/' + QString::number(_application.imageListSize()) + ") ";
+    }
+    if (error) {
+        title += "Error: ";
+    }
+
+    setWindowTitle(title + _application.imageName(_currentIndex));
+}
+
+void MainWidget::_stopDragging() {
+    if (_isDraggingImage) {
+        _isDraggingImage = false;
+        if (_draggingCursorEnable) {
+            unsetCursor();
+            _draggingCursorEnable = false;
+        }
+    }
+}
+
+void MainWidget::_loadImage(const QString & filePath) {
+    _setTitle();
+    setCursor(Qt::BusyCursor);
+
+    _current->clear();
+    _imageLoader.load(filePath);
+
+    update();
+}
+
+
+
+void MainWidget::_createShortcuts() {
+    new QShortcut(_config.keyNext[0], this, this, &MainWidget::_loadNext);
+    new QShortcut(_config.keyNext[1], this, this, &MainWidget::_loadNext);
+    new QShortcut(_config.keyNext[2], this, this, &MainWidget::_loadNext);
+
+    new QShortcut(_config.keyPrevious[0], this,
+                  this, &MainWidget::_loadPrevious);
+    new QShortcut(_config.keyPrevious[1], this,
+                  this, &MainWidget::_loadPrevious);
+    new QShortcut(_config.keyPrevious[2], this,
+                  this, &MainWidget::_loadPrevious);
+
+    auto funScaleUp = [this](){
+        _stopDragging();
+        _current->scaleByWidgetCenter(1);
+        update();
+    };
+    new QShortcut(_config.keyScaleUp[0], this, this, funScaleUp);
+    new QShortcut(_config.keyScaleUp[1], this, this, funScaleUp);
+
+    auto funScaleDown = [this](){
+        _stopDragging();
+        _current->scaleByWidgetCenter(-1);
+        update();
+    };
+    new QShortcut(_config.keyScaleDown[0], this, this, funScaleDown);
+    new QShortcut(_config.keyScaleDown[1], this, this, funScaleDown);
+
+    new QShortcut(_config.keyNextFrame, this,
+                  this, &MainWidget::_jumpToNextFrame);
+    new QShortcut(_config.keyPreviousFrame, this,
+                  this, &MainWidget::_jumpToPreviousFrame);
+
+    new QShortcut(_config.keyClose, this, this, &MainWidget::close);
+
+    QShortcut * s;
+
+    s = new QShortcut(_config.keyChangeFullScreenState, this,
+                      this, &MainWidget::_changeFullScreen);
+    s->setAutoRepeat(false);
+
+    s = new QShortcut(_config.keyScreenStateDown, this, this, [this](){
+        if (changeDownScreenMode(_config.enableNormalazeFromMaximize,
+                                 _config.enableHiding))
+        {
+            _stopDragging();
+            _layout->fullScreen->setSwitched(false);
+        }
+    });
+    s->setAutoRepeat(false);
+
+    auto funPaused = [this](){
+        _setPaused(!_current->isPaused());
+    };
+    s = new QShortcut(_config.keyChangePaused[0], this, this, funPaused);
+    s->setAutoRepeat(false);
+    s = new QShortcut(_config.keyChangePaused[1], this, this, funPaused);
+    s->setAutoRepeat(false);
+
+    s = new QShortcut(_config.keyPinOnTop, this, this, &MainWidget::_pinOnTop);
+    s->setAutoRepeat(false);
+
+    s = new QShortcut(_config.keyBrowse, this,
+                      this, &MainWidget::_browseCurrentFile);
+    s->setAutoRepeat(false);
 }

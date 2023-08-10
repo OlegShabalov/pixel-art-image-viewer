@@ -49,17 +49,15 @@ public:
 
     bool enablePictureCount;
 
-
-
-    QKeySequence keyNext;
-    QKeySequence keyPrevious;
-    QKeySequence keyScaleUp;
-    QKeySequence keyScaleDown;
+    QKeySequence keyNext[3];
+    QKeySequence keyPrevious[3];
+    QKeySequence keyScaleUp[2];
+    QKeySequence keyScaleDown[2];
     QKeySequence keyBrowse;
     QKeySequence keyChangeFullScreenState;
     QKeySequence keyScreenStateDown;
     QKeySequence keyPinOnTop;
-    QKeySequence keyChangePaused;
+    QKeySequence keyChangePaused[2];
     QKeySequence keyNextFrame;
     QKeySequence keyPreviousFrame;
     QKeySequence keyClose;

@@ -29,21 +29,10 @@ protected:
     void leaveEvent(QEvent * event) override;
     void wheelEvent(QWheelEvent * event) override;
 
-    void keyPressEvent(QKeyEvent * event) override;
-
     void paintEvent(QPaintEvent * event) override;
 
     void resizeEvent(QResizeEvent * event) override;
     void moveEvent(QMoveEvent * event) override;
-
-private:
-    static bool _keyMatches(const QKeySequence & seq, const QKeyEvent * event);
-
-    void _setTitle(bool error = false);
-
-    void _stopDragging();
-
-    void _loadImage(const QString & filePath);
 
 private Q_SLOTS:
     void _loadNext();
@@ -57,6 +46,13 @@ private Q_SLOTS:
     void _setPaused(bool paused);
     void _jumpToNextFrame();
     void _jumpToPreviousFrame();
+
+private:
+    void _setTitle(bool error = false);
+    void _stopDragging();
+    void _loadImage(const QString & filePath);
+
+    void _createShortcuts();
 
 private:
     Image * _current;
