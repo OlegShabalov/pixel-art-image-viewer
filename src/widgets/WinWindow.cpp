@@ -18,7 +18,6 @@ WinWindow::WinWindow(const QString & settingsPath,
     , _windowIdentifier(windowIdentifier)
 {
     resize(defaultWidth, defaultHeight);
-    _loadGeometry();
 }
 
 
@@ -114,10 +113,19 @@ bool WinWindow::setKeepOnTopMode(bool enable) {
     return true;
 }
 
+void WinWindow::setVisible(bool visible) {
+    const bool v = isVisible();
+    QWidget::setVisible(visible);
+
+    if (visible && !v && !isMinimized()) {
+        _loadGeometry();
+    }
+}
+
 
 
 void WinWindow::closeEvent(QCloseEvent * event) {
-    if (!isFullScreen()) {
+    if (!isFullScreen() && isVisible()) {
         _saveGeometry();
     }
     QWidget::closeEvent(event);
@@ -172,13 +180,18 @@ void WinWindow::_loadGeometry() {
     const QString settingsPath =
         QDir(QApplication::applicationDirPath()).filePath(_settingsPath);
 
-    const QSettings settings(settingsPath, QSettings::IniFormat);
-    const QByteArray a =
-        settings.value(_windowIdentifier+":WindowPlacement").toByteArray();
+    QSettings settings(settingsPath, QSettings::IniFormat);
+    settings.beginGroup(_windowIdentifier);
 
-    if (!a.isEmpty()) {
+    const QByteArray ba = QByteArray::fromBase64(
+        settings.value("WindowPlacement").toByteArray()
+    );
+
+    settings.endGroup();
+
+    if (!ba.isEmpty()) {
         const WINDOWPLACEMENT * placement =
-            reinterpret_cast<const WINDOWPLACEMENT *>(a.constData());
+            reinterpret_cast<const WINDOWPLACEMENT *>(ba.constData());
 
         if (placement->showCmd == SW_SHOWMAXIMIZED) {
             showMaximized();
@@ -200,13 +213,15 @@ void WinWindow::_saveGeometry() {
             placement.showCmd = SW_SHOWNORMAL;
         }
 
-        const char * p = reinterpret_cast<const char * >(&placement);
-        const QByteArray a = QByteArray::fromRawData(p, sizeof(WINDOWPLACEMENT));
+        const char * const p = reinterpret_cast<const char * >(&placement);
+        const QByteArray ba(p, sizeof(WINDOWPLACEMENT));
 
         const QString settingsPath =
             QDir(QApplication::applicationDirPath()).filePath(_settingsPath);
 
         QSettings settings(settingsPath, QSettings::IniFormat);
-        settings.setValue(_windowIdentifier+":WindowPlacement", a);
+        settings.beginGroup(_windowIdentifier);
+        settings.setValue("WindowPlacement", ba.toBase64());
+        settings.endGroup();
     }
 }

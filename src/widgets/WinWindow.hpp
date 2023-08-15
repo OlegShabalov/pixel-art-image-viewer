@@ -33,6 +33,8 @@ public Q_SLOTS:
     void changeKeepOnTopMode();
     bool setKeepOnTopMode(bool enable);
 
+    void setVisible(bool visible) override;
+
 protected:
     void closeEvent(QCloseEvent * event) override;
     bool event(QEvent * event) override;
