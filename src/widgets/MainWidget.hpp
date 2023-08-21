@@ -10,6 +10,7 @@
 #include "Layout.hpp"
 #include "Application.hpp"
 #include "WinWindow.hpp"
+#include "SettingsWidget.hpp"
 
 
 
@@ -47,6 +48,8 @@ private Q_SLOTS:
     void _jumpToNextFrame();
     void _jumpToPreviousFrame();
 
+    void _openSettings();
+
 private:
     void _setTitle(bool error = false);
     void _stopDragging();
@@ -72,6 +75,8 @@ private:
     ImageLoader _imageLoader;
 
     Layout * _layout;
+
+    SettingsWidget * _settings = nullptr;
 };
 
 

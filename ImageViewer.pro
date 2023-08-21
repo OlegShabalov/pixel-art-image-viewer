@@ -15,6 +15,7 @@ SOURCES += \
     Layout.cpp \
     main.cpp \
     src/widgets/MainWidget.cpp \
+    src/widgets/SettingsWidget.cpp \
     src/widgets/WinWindow.cpp
 
 HEADERS += \
@@ -26,6 +27,7 @@ HEADERS += \
     Layout.hpp \
     Math.hpp \
     src/widgets/MainWidget.hpp \
+    src/widgets/SettingsWidget.hpp \
     src/widgets/WinWindow.hpp
 
 RESOURCES += \

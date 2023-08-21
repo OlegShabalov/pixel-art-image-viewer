@@ -61,6 +61,7 @@ public:
     QKeySequence keyNextFrame;
     QKeySequence keyPreviousFrame;
     QKeySequence keyClose;
+    QKeySequence keySettings;
 };
 
 

@@ -35,4 +35,5 @@ ConfigItem::ConfigItem()
     , keyNextFrame             {Qt::Key_Period}
     , keyPreviousFrame         {Qt::Key_Comma}
     , keyClose                 {Qt::CTRL + Qt::Key_Q}
+    , keySettings              {Qt::CTRL + Qt::Key_I}
 {  }

@@ -37,6 +37,8 @@ MainWidget::MainWidget(Application & application, int imageIndex)
             this, &MainWidget::_jumpToNextFrame);
     connect(_layout->previousFrame, &IconButton::clicked,
             this, &MainWidget::_jumpToPreviousFrame);
+    connect(_layout->settings, &IconButton::clicked,
+            this, &MainWidget::_openSettings);
 
     connect(&_imageLoader, &ImageLoader::finished,
             this, &MainWidget::_setImage);
@@ -321,6 +323,14 @@ void MainWidget::_jumpToPreviousFrame() {
     _setPaused(_current->isPaused());
 }
 
+void MainWidget::_openSettings() {
+    if (!_settings) {
+        _settings = new SettingsWidget(this, _config);
+    }
+    _settings->show();
+    _settings->activateWindow();
+}
+
 
 
 void MainWidget::_setTitle(bool error) {
@@ -428,5 +438,9 @@ void MainWidget::_createShortcuts() {
 
     s = new QShortcut(_config.keyBrowse, this,
                       this, &MainWidget::_browseCurrentFile);
+    s->setAutoRepeat(false);
+
+    s = new QShortcut(_config.keySettings, this,
+                      this, &MainWidget::_openSettings);
     s->setAutoRepeat(false);
 }
