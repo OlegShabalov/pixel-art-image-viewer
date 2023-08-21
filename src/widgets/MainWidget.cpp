@@ -334,9 +334,10 @@ void MainWidget::_openSettings() {
 
 
 void MainWidget::_setTitle(bool error) {
-    QString title = "(";
+    QString title;
 
     if (_config.enablePictureCount) {
+        title += '(';
         if (_application.imageListSize() == 0) {
             title += '0';
         }
