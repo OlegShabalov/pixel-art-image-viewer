@@ -146,6 +146,10 @@ void Image::fixImage() {
     _proportionalResize(_widgetSize());
 }
 
+void Image::calculateMinMaxScale() {
+    _calculateMinMaxScale();
+}
+
 
 
 void Image::setPaused(bool paused) {

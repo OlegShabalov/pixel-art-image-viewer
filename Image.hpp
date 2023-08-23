@@ -32,6 +32,8 @@ public:
     void changeFixing(const QPoint & mousePosition);
     void fixImage();
 
+    void calculateMinMaxScale();
+
     void setPaused(bool paused);
     bool isPaused() const;
     void jumpToNextFrame();

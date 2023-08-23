@@ -3,16 +3,16 @@
 
 
 ConfigItem::ConfigItem()
-    : useCursorAsScaleCenter(true)
-    , windowResizeStrategy(ScaleFragment)
-    , enableGesturesToScroll(true)
-    , moveMarginInPixels(20)
-    , maxPixelSize(400)
-    , minImageSize(100)
-    , enableOneToOneScaling(true)
+    : useCursorAsScaleCenter(true) //
+    , maxPixelSize(400) //
+    , minImageSize(100) //
+    , enableOneToOneScaling(true) //
 
-    , fixImageWhenWindowMaximized(false)
-    , fixImageWhenWindowFullScreen(true)
+    , moveMarginInPixels(20) //
+
+    , fixImageWhenWindowMaximized(false) //
+    , fixImageWhenWindowFullScreen(true) //
+    , windowResizeStrategy(ScaleFragment) //
 
     , enableHiding(true)
     , enableNormalazeFromMaximize(true)
@@ -22,6 +22,7 @@ ConfigItem::ConfigItem()
     , guiScale(0.8)
 
     , enablePictureCount(true)
+    , enableGesturesToScroll(true)
 
     , keyNext                  {Qt::Key_Right, Qt::Key_D, Qt::Key_L}
     , keyPrevious              {Qt::Key_Left,  Qt::Key_A, Qt::Key_J}
@@ -37,3 +38,39 @@ ConfigItem::ConfigItem()
     , keyClose                 {Qt::CTRL + Qt::Key_Q}
     , keySettings              {Qt::CTRL + Qt::Key_I}
 {  }
+
+
+
+void ConfigItem::setUseCursorAsScaleCenter(bool value) {
+    useCursorAsScaleCenter = value;
+}
+void ConfigItem::setMaxPixelSize(int value) {
+    if (maxPixelSize != value) {
+        maxPixelSize = value;
+        Q_EMIT minMaxImageSizeChanged();
+    }
+}
+void ConfigItem::setMinImageSize(int value) {
+    if (minImageSize != value) {
+        minImageSize = value;
+        Q_EMIT minMaxImageSizeChanged();
+    }
+}
+void ConfigItem::setEnableOneToOneScaling(bool enable) {
+    if (enableOneToOneScaling != enable) {
+        enableOneToOneScaling = enable;
+        Q_EMIT minMaxImageSizeChanged();
+    }
+}
+void ConfigItem::setMoveMarginInPixels(int value) {
+    moveMarginInPixels = value;
+}
+void ConfigItem::setFixImageWhenWindowMaximized(bool enable) {
+    fixImageWhenWindowMaximized = enable;
+}
+void ConfigItem::setFixImageWhenWindowFullScreen(bool enable) {
+    fixImageWhenWindowFullScreen = enable;
+}
+void ConfigItem::setWindowResizeStrategy(char strategy) {
+    windowResizeStrategy = strategy;
+}

@@ -1,12 +1,15 @@
 #ifndef CONFIGITEM_HPP
 #define CONFIGITEM_HPP
 
+#include <QObject>
 #include <QColor>
 #include <QKeySequence>
 
 
 
-class ConfigItem {
+class ConfigItem : public QObject {
+    Q_OBJECT
+
 public:
     enum WindowResizeStrategy : char {
         NoStrategy,
@@ -17,20 +20,30 @@ public:
 public:
     ConfigItem();
 
+public Q_SLOTS:
+    void setUseCursorAsScaleCenter(bool value);
+    void setMaxPixelSize(int value);
+    void setMinImageSize(int value);
+    void setEnableOneToOneScaling(bool enable);
+    void setMoveMarginInPixels(int value);
+    void setFixImageWhenWindowMaximized(bool enable);
+    void setFixImageWhenWindowFullScreen(bool enable);
+    void setWindowResizeStrategy(char strategy);
+
+Q_SIGNALS:
+    void minMaxImageSizeChanged();
+
 public:
     bool useCursorAsScaleCenter;
-    char windowResizeStrategy;
-
-    bool enableGesturesToScroll;
-
-    int moveMarginInPixels;
-
     int maxPixelSize;
     int minImageSize;
     bool enableOneToOneScaling;
 
+    int moveMarginInPixels;
+
     bool fixImageWhenWindowMaximized;
     bool fixImageWhenWindowFullScreen;
+    char windowResizeStrategy;
 
     bool enableHiding;
     bool enableNormalazeFromMaximize;
@@ -48,6 +61,7 @@ public:
     float guiScale;
 
     bool enablePictureCount;
+    bool enableGesturesToScroll;
 
     QKeySequence keyNext[3];
     QKeySequence keyPrevious[3];

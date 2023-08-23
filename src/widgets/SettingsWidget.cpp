@@ -4,6 +4,8 @@
 #include <QScrollBar>
 #include <QShortcut>
 
+#include "ImagePage.hpp"
+
 
 
 SettingsWidget::SettingsWidget(QWidget * parentWindow, ConfigItem & config)
@@ -11,6 +13,7 @@ SettingsWidget::SettingsWidget(QWidget * parentWindow, ConfigItem & config)
     , _config(config)
 {
     setParent(parentWindow);
+    setFocusPolicy(Qt::StrongFocus);
     setWindowFlags(Qt::Window | Qt::WindowCloseButtonHint);
 
     QGridLayout * layout = new QGridLayout(this);
@@ -68,6 +71,8 @@ void SettingsWidget::_createShortcuts() {
 
 
 void SettingsWidget::_createPages() {
+    addPage(new ImagePage(_config), tr("Image"));
+
     addPage(new QLabel("Test1"), "Test1");
     addPage(new QLabel("Test2"), "Test2");
 }

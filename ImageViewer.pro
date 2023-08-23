@@ -14,6 +14,7 @@ SOURCES += \
     ImageLoader.cpp \
     Layout.cpp \
     main.cpp \
+    src/widgets/ImagePage.cpp \
     src/widgets/MainWidget.cpp \
     src/widgets/SettingsWidget.cpp \
     src/widgets/WinWindow.cpp
@@ -26,6 +27,7 @@ HEADERS += \
     ImageLoader.hpp \
     Layout.hpp \
     Math.hpp \
+    src/widgets/ImagePage.hpp \
     src/widgets/MainWidget.hpp \
     src/widgets/SettingsWidget.hpp \
     src/widgets/WinWindow.hpp
