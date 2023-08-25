@@ -14,8 +14,8 @@ ConfigItem::ConfigItem()
     , fixImageWhenWindowFullScreen(true) //
     , windowResizeStrategy(ScaleFragment) //
 
-    , enableHiding(true)
-    , enableNormalazeFromMaximize(true)
+    , enableHiding(true) //
+    , enableNormalazeFromMaximize(true) //
 
     , enableHidingHoveredButtons(false)
     , buttonsBackgroundColor({25, 10, 15, 160})
@@ -76,4 +76,10 @@ void ConfigItem::setFixImageWhenWindowFullScreen(bool enable) {
 }
 void ConfigItem::setWindowResizeStrategy(char strategy) {
     windowResizeStrategy = strategy;
+}
+void ConfigItem::setEnableHiding(bool enable) {
+    enableHiding = enable;
+}
+void ConfigItem::setEnableNormalazeFromMaximize(bool enable) {
+    enableNormalazeFromMaximize = enable;
 }

@@ -17,7 +17,8 @@ SOURCES += \
     src/widgets/ImagePage.cpp \
     src/widgets/MainWidget.cpp \
     src/widgets/SettingsWidget.cpp \
-    src/widgets/WinWindow.cpp
+    src/widgets/WinWindow.cpp \
+    src/widgets/WindowPage.cpp
 
 HEADERS += \
     Application.hpp \
@@ -30,7 +31,8 @@ HEADERS += \
     src/widgets/ImagePage.hpp \
     src/widgets/MainWidget.hpp \
     src/widgets/SettingsWidget.hpp \
-    src/widgets/WinWindow.hpp
+    src/widgets/WinWindow.hpp \
+    src/widgets/WindowPage.hpp
 
 RESOURCES += \
     res.qrc

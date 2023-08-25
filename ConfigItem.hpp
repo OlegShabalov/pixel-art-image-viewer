@@ -29,6 +29,8 @@ public Q_SLOTS:
     void setFixImageWhenWindowMaximized(bool enable);
     void setFixImageWhenWindowFullScreen(bool enable);
     void setWindowResizeStrategy(char strategy);
+    void setEnableHiding(bool enable);
+    void setEnableNormalazeFromMaximize(bool enable);
 
 Q_SIGNALS:
     void minMaxImageSizeChanged();
