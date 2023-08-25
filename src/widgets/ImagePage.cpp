@@ -187,6 +187,7 @@ ImagePage::ImagePage(ConfigItem & config)
     QScrollArea * scrollArea = new QScrollArea(this);
     scrollArea->setFrameShape(QFrame::NoFrame);
     scrollArea->setWidget(content);
+    scrollArea->setWidgetResizable(true);
     mainLayout->addWidget(scrollArea);
 }
 

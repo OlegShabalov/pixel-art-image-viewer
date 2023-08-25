@@ -32,6 +32,7 @@ public Q_SLOTS:
 
 Q_SIGNALS:
     void minMaxImageSizeChanged();
+    void moveMarginChanged();
 
 public:
     bool useCursorAsScaleCenter;

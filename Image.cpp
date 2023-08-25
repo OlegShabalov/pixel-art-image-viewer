@@ -128,6 +128,13 @@ void Image::scaleByWidgetCenter(double by) {
     }
 }
 
+void Image::scaleByImageCenter(double by) {
+    if (_changeScaleValue(by)) {
+        _fixed = false;
+        _scaleContent(QPointF(_x + _w / 2.0, _y + _h / 2.0));
+    }
+}
+
 
 
 void Image::changeFixing(const QPoint & mousePosition) {
@@ -146,8 +153,17 @@ void Image::fixImage() {
     _proportionalResize(_widgetSize());
 }
 
-void Image::calculateMinMaxScale() {
+void Image::correctScale() {
     _calculateMinMaxScale();
+    if (_fixed) {
+        fixImage();
+    }
+    else {
+        scaleByImageCenter(0);
+    }
+}
+void Image::correctPosition() {
+    _correctPosition();
 }
 
 
@@ -261,8 +277,9 @@ void Image::_scaleOneTyOne(const QPoint & mousePosition) {
 
 void Image::_correctPosition() {
     const double margin = _config.moveMarginInPixels;
-    const double marginX = minD(_widgetSize().width()  / 2.0, margin);
-    const double marginY = minD(_widgetSize().height() / 2.0, margin);
+    double marginX = minD(_widgetSize().width()  / 2.0, margin);
+    double marginY = minD(_widgetSize().height() / 2.0, margin);
+    marginX = marginY = minD(marginX, marginY);
 
     _x = restrict(_x, marginX - _w, _widgetSize().width()  - marginX);
     _y = restrict(_y, marginY - _h, _widgetSize().height() - marginY);

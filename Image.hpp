@@ -28,11 +28,13 @@ public:
     void moveTo(const QPointF & pos);
     void scale(double by, const QPoint & mousePosition);
     void scaleByWidgetCenter(double by);
+    void scaleByImageCenter(double by);
 
     void changeFixing(const QPoint & mousePosition);
     void fixImage();
 
-    void calculateMinMaxScale();
+    void correctScale();
+    void correctPosition();
 
     void setPaused(bool paused);
     bool isPaused() const;

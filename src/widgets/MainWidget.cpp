@@ -59,7 +59,12 @@ MainWidget::MainWidget(Application & application, int imageIndex)
 
 
     connect(&_config, &ConfigItem::minMaxImageSizeChanged, this, [this](){
-        _current->calculateMinMaxScale();
+        _current->correctScale();
+        update();
+    });
+    connect(&_config, &ConfigItem::moveMarginChanged, this, [this](){
+       _current->correctPosition();
+       update();
     });
 
     _createShortcuts();

@@ -63,7 +63,10 @@ void ConfigItem::setEnableOneToOneScaling(bool enable) {
     }
 }
 void ConfigItem::setMoveMarginInPixels(int value) {
-    moveMarginInPixels = value;
+    if (moveMarginInPixels != value) {
+        moveMarginInPixels = value;
+        Q_EMIT moveMarginChanged();
+    }
 }
 void ConfigItem::setFixImageWhenWindowMaximized(bool enable) {
     fixImageWhenWindowMaximized = enable;
