@@ -66,6 +66,9 @@ MainWidget::MainWidget(Application & application, int imageIndex)
        _current->correctPosition();
        update();
     });
+    connect(&_config, &ConfigItem::pictureCountingChanged, this, [this](){
+        _setTitle(_loadingError);
+    });
 
     _createShortcuts();
 
@@ -345,6 +348,7 @@ void MainWidget::_openSettings() {
 
 
 void MainWidget::_setTitle(bool error) {
+    _loadingError = error;
     QString title;
 
     if (_config.enablePictureCount) {
@@ -375,7 +379,7 @@ void MainWidget::_stopDragging() {
 }
 
 void MainWidget::_loadImage(const QString & filePath) {
-    _setTitle();
+    _setTitle(false);
     setCursor(Qt::BusyCursor);
 
     _current->clear();

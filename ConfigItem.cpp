@@ -17,11 +17,11 @@ ConfigItem::ConfigItem()
     , enableHiding(true) //
     , enableNormalazeFromMaximize(true) //
 
-    , enableHidingHoveredButtons(false)
+    , enableHidingHoveredButtons(false) //
+    , guiScale(0.8) //
+    , enablePictureCount(true) //
     , buttonsBackgroundColor({25, 10, 15, 160})
-    , guiScale(0.8)
 
-    , enablePictureCount(true)
     , enableGesturesToScroll(true)
 
     , keyNext                  {Qt::Key_Right, Qt::Key_D, Qt::Key_L}
@@ -82,4 +82,19 @@ void ConfigItem::setEnableHiding(bool enable) {
 }
 void ConfigItem::setEnableNormalazeFromMaximize(bool enable) {
     enableNormalazeFromMaximize = enable;
+}
+void ConfigItem::setEnablePictureCount(bool enable) {
+    if (enablePictureCount != enable) {
+        enablePictureCount = enable;
+        Q_EMIT pictureCountingChanged();
+    }
+}
+void ConfigItem::setEnableHidingHoveredButtons(bool enable) {
+    enableHidingHoveredButtons = enable;
+}
+void ConfigItem::setGuiScale(float value) {
+    if (guiScale != value) {
+        guiScale = value;
+        Q_EMIT guiScaleChanged();
+    }
 }

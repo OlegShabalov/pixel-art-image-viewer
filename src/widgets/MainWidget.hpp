@@ -51,7 +51,7 @@ private Q_SLOTS:
     void _openSettings();
 
 private:
-    void _setTitle(bool error = false);
+    void _setTitle(bool error);
     void _stopDragging();
     void _loadImage(const QString & filePath);
 
@@ -63,6 +63,8 @@ private:
 
     Application & _application;
     int _currentIndex = 0;
+
+    bool _loadingError = false;
 
     bool _isDraggingImage = false;
     bool _draggingCursorEnable = false;

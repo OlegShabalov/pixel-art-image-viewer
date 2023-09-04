@@ -58,6 +58,14 @@ Layout::Layout(QWidget * parent, const ConfigItem & config)
     previousFrame = new IconButton(QIcon(":/icon/previous"), _config, parent);
     previousFrame->enableAutoRepeat();
     _widgets.push_back(previousFrame);
+
+
+
+    connect(&config, &ConfigItem::guiScaleChanged, this, [this]() {
+        _updateGeometry();
+        _show();
+        _update();
+    });
 }
 
 

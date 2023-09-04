@@ -5,6 +5,7 @@
 #include <QShortcut>
 
 #include "ImagePage.hpp"
+#include "GuiPage.hpp"
 #include "WindowPage.hpp"
 
 
@@ -73,8 +74,6 @@ void SettingsWidget::_createShortcuts() {
 
 void SettingsWidget::_createPages() {
     addPage(new ImagePage(_config), tr("Image"));
+    addPage(new GuiPage(_config), tr("GUI"));
     addPage(new WindowPage(_config), tr("Window"));
-
-    addPage(new QLabel("Test1"), "Test1");
-    addPage(new QLabel("Test2"), "Test2");
 }

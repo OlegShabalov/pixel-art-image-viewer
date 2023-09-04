@@ -31,10 +31,15 @@ public Q_SLOTS:
     void setWindowResizeStrategy(char strategy);
     void setEnableHiding(bool enable);
     void setEnableNormalazeFromMaximize(bool enable);
+    void setEnablePictureCount(bool enable);
+    void setEnableHidingHoveredButtons(bool enable);
+    void setGuiScale(float value);
 
 Q_SIGNALS:
     void minMaxImageSizeChanged();
     void moveMarginChanged();
+    void pictureCountingChanged();
+    void guiScaleChanged();
 
 public:
     bool useCursorAsScaleCenter;
@@ -51,19 +56,17 @@ public:
     bool enableHiding;
     bool enableNormalazeFromMaximize;
 
-    bool enableHidingHoveredButtons;
-
     /*
     bool useDecreasingBestSmooth = true;
     bool useDecreasingSmooth = true;
     bool useIncreasingSmooth = false;
     */
 
+    bool enableHidingHoveredButtons;
+    float guiScale;
+    bool enablePictureCount;
     QColor buttonsBackgroundColor;
 
-    float guiScale;
-
-    bool enablePictureCount;
     bool enableGesturesToScroll;
 
     QKeySequence keyNext[3];
