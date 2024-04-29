@@ -14,6 +14,8 @@ SOURCES += \
     ImageLoader.cpp \
     Layout.cpp \
     main.cpp \
+    src/widgets/ColorButton.cpp \
+    src/widgets/ColorDialog.cpp \
     src/widgets/GuiPage.cpp \
     src/widgets/ImagePage.cpp \
     src/widgets/MainWidget.cpp \
@@ -29,6 +31,8 @@ HEADERS += \
     ImageLoader.hpp \
     Layout.hpp \
     Math.hpp \
+    src/widgets/ColorButton.hpp \
+    src/widgets/ColorDialog.hpp \
     src/widgets/GuiPage.hpp \
     src/widgets/ImagePage.hpp \
     src/widgets/MainWidget.hpp \

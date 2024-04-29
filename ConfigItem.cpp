@@ -98,3 +98,9 @@ void ConfigItem::setGuiScale(float value) {
         Q_EMIT guiScaleChanged();
     }
 }
+void ConfigItem::setButtonsBackgroundColor(const QColor & color) {
+    if (buttonsBackgroundColor != color) {
+        buttonsBackgroundColor = color;
+        Q_EMIT buttonsBackgroundColorChanged();
+    }
+}

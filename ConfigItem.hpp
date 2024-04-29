@@ -34,12 +34,14 @@ public Q_SLOTS:
     void setEnablePictureCount(bool enable);
     void setEnableHidingHoveredButtons(bool enable);
     void setGuiScale(float value);
+    void setButtonsBackgroundColor(const QColor & color);
 
 Q_SIGNALS:
     void minMaxImageSizeChanged();
     void moveMarginChanged();
     void pictureCountingChanged();
     void guiScaleChanged();
+    void buttonsBackgroundColorChanged();
 
 public:
     bool useCursorAsScaleCenter;

@@ -7,6 +7,9 @@
 #include <QSlider>
 #include <QScrollArea>
 
+#include "ColorButton.hpp"
+#include "ColorDialog.hpp"
+
 
 
 GuiPage::GuiPage(ConfigItem & config)
@@ -69,6 +72,47 @@ GuiPage::GuiPage(ConfigItem & config)
     titleLayout->addWidget(enablePictureCount);
     connect(enablePictureCount, &QCheckBox::toggled,
             &config, &ConfigItem::setEnablePictureCount);
+
+
+
+    QGroupBox * colorBox = new QGroupBox(tr("Colors"), this);
+    layout->addWidget(colorBox);
+
+    QGridLayout * colorLayout = new QGridLayout;
+    colorLayout->setColumnStretch(2, 1);
+    colorBox->setLayout(colorLayout);
+
+
+
+    QLabel * backgroundColorLabel =
+        new QLabel(tr("Buttons background color:"), this);
+    colorLayout->addWidget(backgroundColorLabel, 0, 0);
+
+    ColorButton * backgroundColorButton =
+        new ColorButton(_config.buttonsBackgroundColor);
+
+    auto colorButtonClick = [this, backgroundColorButton](){
+        ColorDialog * colorDialog =
+            new ColorDialog(_config.buttonsBackgroundColor, this);
+        colorDialog->setWindowTitle(tr("Select color"));
+
+        connect(colorDialog, &ColorDialog::currentColorChanged,
+                backgroundColorButton, &ColorButton::setColor);
+        connect(colorDialog, &ColorDialog::currentColorChanged,
+                &_config, &ConfigItem::setButtonsBackgroundColor);
+
+        QColor backup = _config.buttonsBackgroundColor;
+        this->topLevelWidget()->hide();
+        if (colorDialog->exec() == QDialog::Rejected) {
+            backgroundColorButton->setColor(backup);
+            _config.setButtonsBackgroundColor(backup);
+        }
+        this->topLevelWidget()->show();
+    };
+
+    connect(backgroundColorButton, &QPushButton::clicked,
+            this, colorButtonClick);
+    colorLayout->addWidget(backgroundColorButton, 0, 1);
 
 
 

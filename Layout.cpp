@@ -66,6 +66,10 @@ Layout::Layout(QWidget * parent, const ConfigItem & config)
         _show();
         _update();
     });
+    connect(&config, &ConfigItem::buttonsBackgroundColorChanged, this,[this](){
+        _show();
+        _update();
+    });
 }
 
 
