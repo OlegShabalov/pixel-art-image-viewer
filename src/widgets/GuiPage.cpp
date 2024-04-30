@@ -116,6 +116,39 @@ GuiPage::GuiPage(ConfigItem & config)
 
 
 
+    QLabel * windowBackgroundColorLabel =
+        new QLabel(tr("Window background color:"), this);
+    colorLayout->addWidget(windowBackgroundColorLabel, 1, 0);
+
+    ColorButton * windowBackgroundColorButton =
+        new ColorButton(_config.windowBackgroundColor);
+
+    auto windowColorButtonClick = [this, windowBackgroundColorButton](){
+        ColorDialog * colorDialog =
+            new ColorDialog(_config.windowBackgroundColor, this);
+        colorDialog->setEnabledAlphaChannel(false);
+        colorDialog->setWindowTitle(tr("Select color"));
+
+        connect(colorDialog, &ColorDialog::currentColorChanged,
+                windowBackgroundColorButton, &ColorButton::setColor);
+        connect(colorDialog, &ColorDialog::currentColorChanged,
+                &_config, &ConfigItem::setWindowBackgroundColor);
+
+        QColor backup = _config.windowBackgroundColor;
+        this->topLevelWidget()->hide();
+        if (colorDialog->exec() == QDialog::Rejected) {
+            windowBackgroundColorButton->setColor(backup);
+            _config.setWindowBackgroundColor(backup);
+        }
+        this->topLevelWidget()->show();
+    };
+
+    connect(windowBackgroundColorButton, &QPushButton::clicked,
+            this, windowColorButtonClick);
+    colorLayout->addWidget(windowBackgroundColorButton, 1, 1);
+
+
+
     layout->addStretch();
 
     QScrollArea * scrollArea = new QScrollArea(this);

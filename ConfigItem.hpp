@@ -35,6 +35,7 @@ public Q_SLOTS:
     void setEnableHidingHoveredButtons(bool enable);
     void setGuiScale(float value);
     void setButtonsBackgroundColor(const QColor & color);
+    void setWindowBackgroundColor(const QColor & color);
 
 Q_SIGNALS:
     void minMaxImageSizeChanged();
@@ -42,6 +43,7 @@ Q_SIGNALS:
     void pictureCountingChanged();
     void guiScaleChanged();
     void buttonsBackgroundColorChanged();
+    void windowBackgroundColorChanged();
 
 public:
     bool useCursorAsScaleCenter;
@@ -68,6 +70,7 @@ public:
     float guiScale;
     bool enablePictureCount;
     QColor buttonsBackgroundColor;
+    QColor windowBackgroundColor;
 
     bool enableGesturesToScroll;
 

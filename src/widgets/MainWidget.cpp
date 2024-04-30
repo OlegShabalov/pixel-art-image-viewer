@@ -7,6 +7,7 @@
 #include <QMovie>
 #include <QProcess>
 #include <QShortcut>
+#include <QPalette>
 
 #include "Math.hpp"
 
@@ -19,6 +20,18 @@ MainWidget::MainWidget(Application & application, int imageIndex)
 {
     setAttribute(Qt::WA_DeleteOnClose);
     setMouseTracking(true);
+
+    {
+        QPalette p;
+        p.setColor(QPalette::Window, _config.windowBackgroundColor);
+        setAutoFillBackground(true);
+        setPalette(p);
+    }
+    connect(&_config, &ConfigItem::windowBackgroundColorChanged, this,[this](){
+        QPalette p = palette();
+        p.setColor(QPalette::Window, _config.windowBackgroundColor);
+        setPalette(p);
+    });
 
     _layout = new Layout(this, _config);
     connect(_layout->next, &IconButton::clicked,

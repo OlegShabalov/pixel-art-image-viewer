@@ -20,7 +20,8 @@ ConfigItem::ConfigItem()
     , enableHidingHoveredButtons(false) //
     , guiScale(0.8) //
     , enablePictureCount(true) //
-    , buttonsBackgroundColor({25, 10, 15, 160})
+    , buttonsBackgroundColor({25, 10, 15, 160}) //
+    , windowBackgroundColor({240, 240, 240}) //
 
     , enableGesturesToScroll(true)
 
@@ -102,5 +103,11 @@ void ConfigItem::setButtonsBackgroundColor(const QColor & color) {
     if (buttonsBackgroundColor != color) {
         buttonsBackgroundColor = color;
         Q_EMIT buttonsBackgroundColorChanged();
+    }
+}
+void ConfigItem::setWindowBackgroundColor(const QColor & color) {
+    if (windowBackgroundColor != color)    {
+        windowBackgroundColor = color;
+        Q_EMIT windowBackgroundColorChanged();
     }
 }
