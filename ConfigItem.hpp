@@ -38,7 +38,8 @@ public Q_SLOTS:
     void setWindowBackgroundColor(const QColor & color);
 
 Q_SIGNALS:
-    void minMaxImageSizeChanged();
+    void minImageSizeChanged();
+    void maxImageSizeChanged();
     void moveMarginChanged();
     void pictureCountingChanged();
     void guiScaleChanged();

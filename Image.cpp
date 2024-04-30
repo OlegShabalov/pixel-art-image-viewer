@@ -153,13 +153,22 @@ void Image::fixImage() {
     _proportionalResize(_widgetSize());
 }
 
-void Image::correctScale() {
+void Image::correctScaleFromMin() {
     _calculateMinMaxScale();
     if (_fixed) {
         fixImage();
     }
     else {
         scaleByImageCenter(0);
+    }
+}
+void Image::correctScaleFromMax() {
+    _calculateMinMaxScale();
+    if (_fixed) {
+        fixImage();
+    }
+    else {
+        scaleByWidgetCenter(0);
     }
 }
 void Image::correctPosition() {

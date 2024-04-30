@@ -48,19 +48,19 @@ void ConfigItem::setUseCursorAsScaleCenter(bool value) {
 void ConfigItem::setMaxPixelSize(int value) {
     if (maxPixelSize != value) {
         maxPixelSize = value;
-        Q_EMIT minMaxImageSizeChanged();
+        Q_EMIT maxImageSizeChanged();
     }
 }
 void ConfigItem::setMinImageSize(int value) {
     if (minImageSize != value) {
         minImageSize = value;
-        Q_EMIT minMaxImageSizeChanged();
+        Q_EMIT minImageSizeChanged();
     }
 }
 void ConfigItem::setEnableOneToOneScaling(bool enable) {
     if (enableOneToOneScaling != enable) {
         enableOneToOneScaling = enable;
-        Q_EMIT minMaxImageSizeChanged();
+        Q_EMIT minImageSizeChanged();
     }
 }
 void ConfigItem::setMoveMarginInPixels(int value) {

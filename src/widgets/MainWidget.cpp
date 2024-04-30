@@ -71,8 +71,12 @@ MainWidget::MainWidget(Application & application, int imageIndex)
 
 
 
-    connect(&_config, &ConfigItem::minMaxImageSizeChanged, this, [this](){
-        _current->correctScale();
+    connect(&_config, &ConfigItem::minImageSizeChanged, this, [this](){
+        _current->correctScaleFromMin();
+        update();
+    });
+    connect(&_config, &ConfigItem::maxImageSizeChanged, this, [this](){
+        _current->correctScaleFromMax();
         update();
     });
     connect(&_config, &ConfigItem::moveMarginChanged, this, [this](){
