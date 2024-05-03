@@ -4,11 +4,11 @@
 #include <QWidget>
 #include <QStringList>
 
-#include "Image.hpp"
-#include "ConfigItem.hpp"
-#include "ImageLoader.hpp"
-#include "Layout.hpp"
-#include "Application.hpp"
+#include "src/Image.hpp"
+#include "src/ConfigItem.hpp"
+#include "src/ImageLoader.hpp"
+#include "src/Layout.hpp"
+#include "src/Application.hpp"
 #include "WinWindow.hpp"
 #include "SettingsWidget.hpp"
 

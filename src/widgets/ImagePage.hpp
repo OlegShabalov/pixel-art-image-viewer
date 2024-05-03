@@ -4,7 +4,7 @@
 #include <QWidget>
 #include <QSpinBox>
 
-#include "ConfigItem.hpp"
+#include "src/ConfigItem.hpp"
 
 
 

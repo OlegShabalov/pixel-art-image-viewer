@@ -4,7 +4,7 @@
 #include <QWidget>
 #include <QLabel>
 
-#include "ConfigItem.hpp"
+#include "src/ConfigItem.hpp"
 
 
 

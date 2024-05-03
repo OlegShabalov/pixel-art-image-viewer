@@ -6,7 +6,7 @@
 #include <QStackedWidget>
 
 #include "WinWindow.hpp"
-#include "ConfigItem.hpp"
+#include "src/ConfigItem.hpp"
 
 
 

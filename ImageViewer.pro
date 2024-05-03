@@ -8,14 +8,14 @@ CONFIG += c++11
 QMAKE_LFLAGS += -static
 
 SOURCES += \
-    Application.cpp \
-    ConfigField.cpp \
-    ConfigItem.cpp \
-    IconButton.cpp \
-    Image.cpp \
-    ImageLoader.cpp \
-    Layout.cpp \
-    main.cpp \
+    src/Application.cpp \
+    src/ConfigField.cpp \
+    src/ConfigItem.cpp \
+    src/IconButton.cpp \
+    src/Image.cpp \
+    src/ImageLoader.cpp \
+    src/Layout.cpp \
+    src/main.cpp \
     src/widgets/ColorButton.cpp \
     src/widgets/ColorDialog.cpp \
     src/widgets/GuiPage.cpp \
@@ -26,14 +26,14 @@ SOURCES += \
     src/widgets/WindowPage.cpp
 
 HEADERS += \
-    Application.hpp \
-    ConfigField.hpp \
-    ConfigItem.hpp \
-    IconButton.hpp \
-    Image.hpp \
-    ImageLoader.hpp \
-    Layout.hpp \
-    Math.hpp \
+    src/Application.hpp \
+    src/ConfigField.hpp \
+    src/ConfigItem.hpp \
+    src/IconButton.hpp \
+    src/Image.hpp \
+    src/ImageLoader.hpp \
+    src/Layout.hpp \
+    src/Math.hpp \
     src/widgets/ColorButton.hpp \
     src/widgets/ColorDialog.hpp \
     src/widgets/GuiPage.hpp \

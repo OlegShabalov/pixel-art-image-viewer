@@ -3,7 +3,7 @@
 
 #include <QWidget>
 
-#include "ConfigItem.hpp"
+#include "src/ConfigItem.hpp"
 
 
 

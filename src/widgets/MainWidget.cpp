@@ -9,7 +9,7 @@
 #include <QShortcut>
 #include <QPalette>
 
-#include "Math.hpp"
+#include "src/Math.hpp"
 
 
 
