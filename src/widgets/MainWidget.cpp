@@ -15,6 +15,7 @@
 
 MainWidget::MainWidget(Application & application, int imageIndex)
     : WinWindow("localconfig/winpos", "MainWidget")
+    , _config("localconfig/settings")
     , _application(application)
     , _currentIndex(imageIndex)
 {
@@ -23,13 +24,15 @@ MainWidget::MainWidget(Application & application, int imageIndex)
 
     {
         QPalette p;
-        p.setColor(QPalette::Window, _config.windowBackgroundColor);
+        p.setColor(QPalette::Window, _config.windowBackgroundColor());
         setAutoFillBackground(true);
         setPalette(p);
     }
-    connect(&_config, &ConfigItem::windowBackgroundColorChanged, this,[this](){
+    connect(&_config.windowBackgroundColor, &ColorConfigField::changed,
+            this, [this]()
+    {
         QPalette p = palette();
-        p.setColor(QPalette::Window, _config.windowBackgroundColor);
+        p.setColor(QPalette::Window, _config.windowBackgroundColor());
         setPalette(p);
     });
 
@@ -71,19 +74,28 @@ MainWidget::MainWidget(Application & application, int imageIndex)
 
 
 
-    connect(&_config, &ConfigItem::minImageSizeChanged, this, [this](){
+    auto minImageSizeChangedFun = [this](){
         _current->correctScaleFromMin();
         update();
-    });
-    connect(&_config, &ConfigItem::maxImageSizeChanged, this, [this](){
+    };
+    connect(&_config.minImageSize, &IntConfigField::changed,
+            this, minImageSizeChangedFun);
+    connect(&_config.enableOneToOneScaling, &BoolConfigField::changed,
+            this, minImageSizeChangedFun);
+    connect(&_config.maxPixelSize, &IntConfigField::changed, this, [this](){
         _current->correctScaleFromMax();
         update();
     });
-    connect(&_config, &ConfigItem::moveMarginChanged, this, [this](){
-       _current->correctPosition();
-       update();
-    });
-    connect(&_config, &ConfigItem::pictureCountingChanged, this, [this](){
+
+    auto moveMarginChanged = [this](){
+        _current->correctPosition();
+        update();
+     };
+    connect(&_config.moveMarginInPixels, &IntConfigField::changed,
+            this, moveMarginChanged);
+    connect(&_config.enablePictureCount, &BoolConfigField::changed, this,
+            [this]()
+    {
         _setTitle(_loadingError);
     });
 

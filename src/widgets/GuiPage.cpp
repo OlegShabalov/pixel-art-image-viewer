@@ -41,22 +41,26 @@ GuiPage::GuiPage(ConfigItem & config)
     guiScale->setRange(0.1f * 100, 4 * 100.0f);
     guiLayout->addWidget(guiScale);
     scaleLayout->addWidget(guiScale);
+    guiScale->setValue(_config.guiScale * 100);
     connect(guiScale, &QSlider::valueChanged,
             this, &GuiPage::_guiScaleChanged);
+    connect(&config.guiScale, &FloatConfigField::changed,
+            this, [guiScale](float value)
+    {
+        guiScale->setValue(value * 100.0f);
+    });
 
     _guiScaleValue = new QLabel(this);
     scaleLayout->addWidget(_guiScaleValue);
 
-    guiScale->setValue(_config.guiScale * 100);
 
 
 
     QCheckBox * enableHidingHoveredButtons =
         new QCheckBox(tr("Enable hiding hovered buttons"), this);
-    enableHidingHoveredButtons->setChecked(config.enableHidingHoveredButtons);
     guiLayout->addWidget(enableHidingHoveredButtons);
-    connect(enableHidingHoveredButtons, &QCheckBox::toggled,
-            &config, &ConfigItem::setEnableHidingHoveredButtons);
+    config.enableHidingHoveredButtons
+        .connectCheckBox(enableHidingHoveredButtons);
 
 
 
@@ -68,10 +72,8 @@ GuiPage::GuiPage(ConfigItem & config)
 
     QCheckBox * enablePictureCount =
         new QCheckBox(tr("Enable image count"), this);
-    enablePictureCount->setChecked(config.enablePictureCount);
     titleLayout->addWidget(enablePictureCount);
-    connect(enablePictureCount, &QCheckBox::toggled,
-            &config, &ConfigItem::setEnablePictureCount);
+    config.enablePictureCount.connectCheckBox(enablePictureCount);
 
 
 
@@ -89,29 +91,26 @@ GuiPage::GuiPage(ConfigItem & config)
     colorLayout->addWidget(backgroundColorLabel, 0, 0);
 
     ColorButton * backgroundColorButton =
-        new ColorButton(_config.buttonsBackgroundColor);
+        new ColorButton(_config.buttonsBackgroundColor());
 
-    auto colorButtonClick = [this, backgroundColorButton](){
+    connect(&config.buttonsBackgroundColor, &ColorConfigField::changed,
+            backgroundColorButton, &ColorButton::setColor);
+    connect(backgroundColorButton, &QPushButton::clicked, this, [this](){
         ColorDialog * colorDialog =
-            new ColorDialog(_config.buttonsBackgroundColor, this);
+            new ColorDialog(_config.buttonsBackgroundColor(), this);
+        colorDialog->setAttribute(Qt::WA_DeleteOnClose);
         colorDialog->setWindowTitle(tr("Select color"));
 
         connect(colorDialog, &ColorDialog::currentColorChanged,
-                backgroundColorButton, &ColorButton::setColor);
-        connect(colorDialog, &ColorDialog::currentColorChanged,
-                &_config, &ConfigItem::setButtonsBackgroundColor);
+                &_config.buttonsBackgroundColor, &ColorConfigField::set);
 
-        QColor backup = _config.buttonsBackgroundColor;
+        QColor backup = _config.buttonsBackgroundColor();
         this->topLevelWidget()->hide();
         if (colorDialog->exec() == QDialog::Rejected) {
-            backgroundColorButton->setColor(backup);
-            _config.setButtonsBackgroundColor(backup);
+            _config.buttonsBackgroundColor.set(backup);
         }
         this->topLevelWidget()->show();
-    };
-
-    connect(backgroundColorButton, &QPushButton::clicked,
-            this, colorButtonClick);
+    });
     colorLayout->addWidget(backgroundColorButton, 0, 1);
 
 
@@ -121,30 +120,27 @@ GuiPage::GuiPage(ConfigItem & config)
     colorLayout->addWidget(windowBackgroundColorLabel, 1, 0);
 
     ColorButton * windowBackgroundColorButton =
-        new ColorButton(_config.windowBackgroundColor);
+        new ColorButton(_config.windowBackgroundColor());
 
-    auto windowColorButtonClick = [this, windowBackgroundColorButton](){
+    connect(&config.windowBackgroundColor, &ColorConfigField::changed,
+            windowBackgroundColorButton, &ColorButton::setColor);
+    connect(windowBackgroundColorButton, &QPushButton::clicked, this, [this](){
         ColorDialog * colorDialog =
-            new ColorDialog(_config.windowBackgroundColor, this);
+            new ColorDialog(_config.windowBackgroundColor(), this);
+        colorDialog->setAttribute(Qt::WA_DeleteOnClose);
         colorDialog->setEnabledAlphaChannel(false);
         colorDialog->setWindowTitle(tr("Select color"));
 
         connect(colorDialog, &ColorDialog::currentColorChanged,
-                windowBackgroundColorButton, &ColorButton::setColor);
-        connect(colorDialog, &ColorDialog::currentColorChanged,
-                &_config, &ConfigItem::setWindowBackgroundColor);
+                &_config.windowBackgroundColor, &ColorConfigField::set);
 
-        QColor backup = _config.windowBackgroundColor;
+        QColor backup = _config.windowBackgroundColor();
         this->topLevelWidget()->hide();
         if (colorDialog->exec() == QDialog::Rejected) {
-            windowBackgroundColorButton->setColor(backup);
-            _config.setWindowBackgroundColor(backup);
+            _config.windowBackgroundColor.set(backup);
         }
         this->topLevelWidget()->show();
-    };
-
-    connect(windowBackgroundColorButton, &QPushButton::clicked,
-            this, windowColorButtonClick);
+    });
     colorLayout->addWidget(windowBackgroundColorButton, 1, 1);
 
 
@@ -163,5 +159,5 @@ GuiPage::GuiPage(ConfigItem & config)
 void GuiPage::_guiScaleChanged(int value) {
     const float scale = value / 100.0;
     _guiScaleValue->setText(QString::number(scale, 'f', 2));
-    _config.setGuiScale(scale);
+    _config.guiScale.set(scale);
 }

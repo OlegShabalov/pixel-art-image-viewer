@@ -27,17 +27,13 @@ WindowPage::WindowPage(ConfigItem & config)
     QCheckBox * enableNormalaze = new QCheckBox(tr(
         "Enable normalization from maximized window state"
     ), this);
-    enableNormalaze->setChecked(config.enableNormalazeFromMaximize);
     windowLayout->addWidget(enableNormalaze);
-    connect(enableNormalaze, &QCheckBox::toggled,
-            &config, &ConfigItem::setEnableNormalazeFromMaximize);
+    config.enableNormalazeFromMaximize.connectCheckBox(enableNormalaze);
 
     QCheckBox * enableHiding =
         new QCheckBox(tr("Enable window minimization"), this);
-    enableHiding->setChecked(config.enableHiding);
     windowLayout->addWidget(enableHiding);
-    connect(enableHiding, &QCheckBox::toggled,
-            &config, &ConfigItem::setEnableHiding);
+    config.enableHiding.connectCheckBox(enableHiding);
 
 
 

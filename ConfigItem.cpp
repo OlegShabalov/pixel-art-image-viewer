@@ -1,29 +1,44 @@
 #include "ConfigItem.hpp"
 
+#include <QSettings>
+#include <QApplication>
+#include <QDir>
+
+
+
+void Changes::set(bool value) {
+    if (value != _value) {
+        _value = value;
+        Q_EMIT changed(value);
+    }
+}
+
+
+
 
 
 ConfigItem::ConfigItem()
-    : useCursorAsScaleCenter(true) //
-    , maxPixelSize(400) //
-    , minImageSize(100) //
-    , enableOneToOneScaling(true) //
+    : useCursorAsScaleCenter(true, "UseCursorAsScaleCenter", this) //
+    , enableOneToOneScaling(true, "EnableOneToOneScaling", this) //
+    , maxPixelSize(400, "MaxPixelSize", this) //
+    , minImageSize(100, "MinImageSize", this) //
 
-    , moveMarginInPixels(20) //
+    , moveMarginInPixels(20, "MoveMarginInPixels", this) //
 
-    , fixImageWhenWindowMaximized(false) //
-    , fixImageWhenWindowFullScreen(true) //
-    , windowResizeStrategy(ScaleFragment) //
+    , fixImageWhenWindowMaximized(false, "FixImageWhenWindowMaximized", this) //
+    , fixImageWhenWindowFullScreen(true, "FixImageWhenWindowFullScreen", this) //
+    , windowResizeStrategy(ScaleFragment, "WindowResizeStrategy", this) //
 
-    , enableHiding(true) //
-    , enableNormalazeFromMaximize(true) //
+    , enableHiding(true, "EnableHiding", this) //
+    , enableNormalazeFromMaximize(true, "EnableNormalazeFromMaximize", this) //
 
-    , enableHidingHoveredButtons(false) //
-    , guiScale(0.8) //
-    , enablePictureCount(true) //
-    , buttonsBackgroundColor({25, 10, 15, 160}) //
-    , windowBackgroundColor({240, 240, 240}) //
+    , enableHidingHoveredButtons(false, "EnableHidingHoveredButtons", this) //
+    , guiScale(0.8f, "GuiScale", this) //
+    , enablePictureCount(true, "EnablePictureCount", this) //
+    , buttonsBackgroundColor({25, 10, 15, 160}, "ButtonsBackgroundColor", this) //
+    , windowBackgroundColor({240, 240, 240}, "WindowBackgroundColor", this) //
 
-    , enableGesturesToScroll(true)
+    , enableGesturesToScroll(true, "EnableGesturesToScroll", this)
 
     , keyNext                  {Qt::Key_Right, Qt::Key_D, Qt::Key_L}
     , keyPrevious              {Qt::Key_Left,  Qt::Key_A, Qt::Key_J}
@@ -40,74 +55,52 @@ ConfigItem::ConfigItem()
     , keySettings              {Qt::CTRL + Qt::Key_I}
 {  }
 
+ConfigItem::ConfigItem(const QString & settingsFile)
+    : ConfigItem()
+{
+    loadData(settingsFile);
+}
 
 
-void ConfigItem::setUseCursorAsScaleCenter(bool value) {
-    useCursorAsScaleCenter = value;
-}
-void ConfigItem::setMaxPixelSize(int value) {
-    if (maxPixelSize != value) {
-        maxPixelSize = value;
-        Q_EMIT maxImageSizeChanged();
+
+void ConfigItem::copyData(const ConfigItem & from) {
+    for (int i=0; i<_fields.size(); ++i) {
+        _fields.at(i)->copy(from._fields.at(i));
     }
 }
-void ConfigItem::setMinImageSize(int value) {
-    if (minImageSize != value) {
-        minImageSize = value;
-        Q_EMIT minImageSizeChanged();
+
+void ConfigItem::loadData(const QString & settingsFile) {
+    const QString settingsPath =
+        QDir(QApplication::applicationDirPath()).filePath(settingsFile);
+
+    QSettings settings(settingsPath, QSettings::IniFormat);
+    settings.beginGroup("Settings");
+
+    for (int i=0; i<_fields.size(); ++i) {
+        _fields.at(i)->load(settings);
     }
+
+    settings.endGroup();
 }
-void ConfigItem::setEnableOneToOneScaling(bool enable) {
-    if (enableOneToOneScaling != enable) {
-        enableOneToOneScaling = enable;
-        Q_EMIT minImageSizeChanged();
+
+void ConfigItem::saveData(const QString & settingsFile) {
+    const QString settingsPath =
+        QDir(QApplication::applicationDirPath()).filePath(settingsFile);
+
+    QSettings settings(settingsPath, QSettings::IniFormat);
+    settings.beginGroup("Settings");
+
+    for (int i=0; i<_fields.size(); ++i) {
+        _fields.at(i)->save(settings);
     }
+
+    settings.endGroup();
 }
-void ConfigItem::setMoveMarginInPixels(int value) {
-    if (moveMarginInPixels != value) {
-        moveMarginInPixels = value;
-        Q_EMIT moveMarginChanged();
-    }
+
+void ConfigItem::_addField(AbstractConfigField * field) {
+    _fields.append(field);
 }
-void ConfigItem::setFixImageWhenWindowMaximized(bool enable) {
-    fixImageWhenWindowMaximized = enable;
-}
-void ConfigItem::setFixImageWhenWindowFullScreen(bool enable) {
-    fixImageWhenWindowFullScreen = enable;
-}
-void ConfigItem::setWindowResizeStrategy(char strategy) {
-    windowResizeStrategy = strategy;
-}
-void ConfigItem::setEnableHiding(bool enable) {
-    enableHiding = enable;
-}
-void ConfigItem::setEnableNormalazeFromMaximize(bool enable) {
-    enableNormalazeFromMaximize = enable;
-}
-void ConfigItem::setEnablePictureCount(bool enable) {
-    if (enablePictureCount != enable) {
-        enablePictureCount = enable;
-        Q_EMIT pictureCountingChanged();
-    }
-}
-void ConfigItem::setEnableHidingHoveredButtons(bool enable) {
-    enableHidingHoveredButtons = enable;
-}
-void ConfigItem::setGuiScale(float value) {
-    if (guiScale != value) {
-        guiScale = value;
-        Q_EMIT guiScaleChanged();
-    }
-}
-void ConfigItem::setButtonsBackgroundColor(const QColor & color) {
-    if (buttonsBackgroundColor != color) {
-        buttonsBackgroundColor = color;
-        Q_EMIT buttonsBackgroundColorChanged();
-    }
-}
-void ConfigItem::setWindowBackgroundColor(const QColor & color) {
-    if (windowBackgroundColor != color)    {
-        windowBackgroundColor = color;
-        Q_EMIT windowBackgroundColorChanged();
-    }
+
+void ConfigItem::_change() {
+    thereAreChanges.set(true);
 }

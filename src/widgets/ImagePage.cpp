@@ -31,15 +31,13 @@ ImagePage::ImagePage(ConfigItem & config)
 
     QCheckBox * useCursorAsScaleCenter =
         new QCheckBox(tr("Use cursor as scaling center"), this);
-    useCursorAsScaleCenter->setChecked(config.useCursorAsScaleCenter);
     useCursorAsScaleCenter->setToolTip(tr(
         "Use the cursor position as the image scaling center when scaling\n"
         "with the mouse or touchpad. When this option is disabled, the\n"
         "center of the window is used for scaling."
     ));
     scalingLayout->addWidget(useCursorAsScaleCenter);
-    connect(useCursorAsScaleCenter, &QCheckBox::toggled,
-            &config, &ConfigItem::setUseCursorAsScaleCenter);
+    config.useCursorAsScaleCenter.connectCheckBox(useCursorAsScaleCenter);
 
 
 
@@ -63,6 +61,8 @@ ImagePage::ImagePage(ConfigItem & config)
     minMaxSizeLayout->addWidget(_maxPixelSizeSpinBox, 0, 1, Qt::AlignLeft);
     connect(_maxPixelSizeSpinBox, QOverload<int>::of(&QSpinBox::valueChanged),
             this, &ImagePage::_maxPixelSizeChanged);
+    connect(&config.maxPixelSize, &IntConfigField::changed,
+            _maxPixelSizeSpinBox, &QSpinBox::setValue);
 
     QLabel * minImageSizeLabel = new QLabel(tr("Min image size:"), this);
     minImageSizeLabel->setToolTip(tr(
@@ -80,19 +80,19 @@ ImagePage::ImagePage(ConfigItem & config)
     minMaxSizeLayout->addWidget(_minImageSizeSpinBox, 1, 1, Qt::AlignLeft);
     connect(_minImageSizeSpinBox, QOverload<int>::of(&QSpinBox::valueChanged),
             this, &ImagePage::_minImageSizeChanged);
+    connect(&config.minImageSize, &IntConfigField::changed,
+            _minImageSizeSpinBox, &QSpinBox::setValue);
 
 
 
     QCheckBox * enableOneToOneScaling =
         new QCheckBox(tr("Allow one to one scaling"), this);
-    enableOneToOneScaling->setChecked(_config.enableOneToOneScaling);
     enableOneToOneScaling->setToolTip(tr(
         "The minimum image size may become smaller than\n"
         "the specified one if the image is small."
     ));
     minMaxSizeLayout->addWidget(enableOneToOneScaling, 1, 2);
-    connect(enableOneToOneScaling, &QCheckBox::toggled,
-            &config, &ConfigItem::setEnableOneToOneScaling);
+    config.enableOneToOneScaling.connectCheckBox(enableOneToOneScaling);
 
 
 
@@ -114,10 +114,8 @@ ImagePage::ImagePage(ConfigItem & config)
     marginSpinBox->setRange(0, 1000);
     marginSpinBox->setSuffix(tr(" px"));
     marginSpinBox->setSingleStep(5);
-    marginSpinBox->setValue(config.moveMarginInPixels);
     movingLayout->addWidget(marginSpinBox, 0, 1, Qt::AlignLeft);
-    connect(marginSpinBox, QOverload<int>::of(&QSpinBox::valueChanged),
-            &config, &ConfigItem::setMoveMarginInPixels);
+    config.moveMarginInPixels.connectSpinBox(marginSpinBox);
 
 
 
@@ -129,17 +127,13 @@ ImagePage::ImagePage(ConfigItem & config)
 
     QCheckBox * fixImageWhenMaximized =
         new QCheckBox(tr("Reset image position when maximizing window"), this);
-    fixImageWhenMaximized->setChecked(config.fixImageWhenWindowMaximized);
     windowLayout->addWidget(fixImageWhenMaximized);
-    connect(fixImageWhenMaximized, &QCheckBox::toggled,
-            &config, &ConfigItem::setFixImageWhenWindowMaximized);
+    config.fixImageWhenWindowMaximized.connectCheckBox(fixImageWhenMaximized);
 
     QCheckBox * fixImageWhenFullScreen =
         new QCheckBox(tr("Reset image position in fullscreen"), this);
-    fixImageWhenFullScreen->setChecked(config.fixImageWhenWindowFullScreen);
     windowLayout->addWidget(fixImageWhenFullScreen);
-    connect(fixImageWhenFullScreen, &QCheckBox::toggled,
-            &config, &ConfigItem::setFixImageWhenWindowFullScreen);
+    config.fixImageWhenWindowFullScreen.connectCheckBox(fixImageWhenFullScreen);
 
     QHBoxLayout * hLayout = new QHBoxLayout;
     windowLayout->addLayout(hLayout);
@@ -167,13 +161,26 @@ ImagePage::ImagePage(ConfigItem & config)
             this, [this](int index)
     {
         if (index == 1) {
-            _config.setWindowResizeStrategy(ConfigItem::FocusOnCenter);
+            _config.windowResizeStrategy.set(ConfigItem::FocusOnCenter);
         }
         else if (index == 2) {
-            _config.setWindowResizeStrategy(ConfigItem::ScaleFragment);
+            _config.windowResizeStrategy.set(ConfigItem::ScaleFragment);
         }
         else {
-            _config.setWindowResizeStrategy(ConfigItem::NoStrategy);
+            _config.windowResizeStrategy.set(ConfigItem::NoStrategy);
+        }
+    });
+    connect(&config.windowResizeStrategy, &IntConfigField::changed,
+            this, [windowResizeStrategy](int index)
+    {
+        if (index == ConfigItem::FocusOnCenter) {
+            windowResizeStrategy->setCurrentIndex(1);
+        }
+        else if (index == ConfigItem::ScaleFragment) {
+            windowResizeStrategy->setCurrentIndex(2);
+        }
+        else {
+            windowResizeStrategy->setCurrentIndex(0);
         }
     });
     hLayout->addStretch();
@@ -194,13 +201,13 @@ ImagePage::ImagePage(ConfigItem & config)
 
 
 void ImagePage::_maxPixelSizeChanged(int max) {
-    _config.setMaxPixelSize(max);
+    _config.maxPixelSize.set(max);
     if (max < _minImageSizeSpinBox->value()) {
         _minImageSizeSpinBox->setValue(max);
     }
 }
 void ImagePage::_minImageSizeChanged(int min) {
-    _config.setMinImageSize(min);
+    _config.minImageSize.set(min);
     if (min > _maxPixelSizeSpinBox->value()) {
         _maxPixelSizeSpinBox->setValue(min);
     }

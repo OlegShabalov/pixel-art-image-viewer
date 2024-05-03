@@ -1,15 +1,35 @@
 #ifndef CONFIGITEM_HPP
 #define CONFIGITEM_HPP
 
-#include <QObject>
+#include <QColor>
 #include <QColor>
 #include <QKeySequence>
+#include <QVector>
+
+#include "ConfigField.hpp"
 
 
 
-class ConfigItem : public QObject {
+class Changes : public QObject {
     Q_OBJECT
+public:
+    inline operator bool () const { return _value; }
 
+public Q_SLOTS:
+    void set(bool value);
+
+Q_SIGNALS:
+    void changed(bool value);
+
+private:
+    bool _value = false;
+};
+
+
+
+
+
+class ConfigItem {
 public:
     enum WindowResizeStrategy : char {
         NoStrategy,
@@ -19,47 +39,34 @@ public:
 
 public:
     ConfigItem();
+    ConfigItem(const QString & settingsFile);
 
-public Q_SLOTS:
-    void setUseCursorAsScaleCenter(bool value);
-    void setMaxPixelSize(int value);
-    void setMinImageSize(int value);
-    void setEnableOneToOneScaling(bool enable);
-    void setMoveMarginInPixels(int value);
-    void setFixImageWhenWindowMaximized(bool enable);
-    void setFixImageWhenWindowFullScreen(bool enable);
-    void setWindowResizeStrategy(char strategy);
-    void setEnableHiding(bool enable);
-    void setEnableNormalazeFromMaximize(bool enable);
-    void setEnablePictureCount(bool enable);
-    void setEnableHidingHoveredButtons(bool enable);
-    void setGuiScale(float value);
-    void setButtonsBackgroundColor(const QColor & color);
-    void setWindowBackgroundColor(const QColor & color);
+    void copyData(const ConfigItem & from);
+    void loadData(const QString & settingsFile);
+    void saveData(const QString & settingsFile);
 
-Q_SIGNALS:
-    void minImageSizeChanged();
-    void maxImageSizeChanged();
-    void moveMarginChanged();
-    void pictureCountingChanged();
-    void guiScaleChanged();
-    void buttonsBackgroundColorChanged();
-    void windowBackgroundColorChanged();
+private:
+    friend class AbstractConfigField;
+    void _addField(AbstractConfigField * field);
+    void _change();
+    QList<AbstractConfigField *> _fields;
 
 public:
-    bool useCursorAsScaleCenter;
-    int maxPixelSize;
-    int minImageSize;
-    bool enableOneToOneScaling;
+    Changes thereAreChanges;
 
-    int moveMarginInPixels;
+    BoolConfigField useCursorAsScaleCenter;
+    BoolConfigField enableOneToOneScaling;
+    IntConfigField maxPixelSize;
+    IntConfigField minImageSize;
 
-    bool fixImageWhenWindowMaximized;
-    bool fixImageWhenWindowFullScreen;
-    char windowResizeStrategy;
+    IntConfigField moveMarginInPixels;
 
-    bool enableHiding;
-    bool enableNormalazeFromMaximize;
+    BoolConfigField fixImageWhenWindowMaximized;
+    BoolConfigField fixImageWhenWindowFullScreen;
+    IntConfigField windowResizeStrategy;
+
+    BoolConfigField enableHiding;
+    BoolConfigField enableNormalazeFromMaximize;
 
     /*
     bool useDecreasingBestSmooth = true;
@@ -67,13 +74,13 @@ public:
     bool useIncreasingSmooth = false;
     */
 
-    bool enableHidingHoveredButtons;
-    float guiScale;
-    bool enablePictureCount;
-    QColor buttonsBackgroundColor;
-    QColor windowBackgroundColor;
+    BoolConfigField enableHidingHoveredButtons;
+    FloatConfigField guiScale;
+    BoolConfigField enablePictureCount;
+    ColorConfigField buttonsBackgroundColor;
+    ColorConfigField windowBackgroundColor;
 
-    bool enableGesturesToScroll;
+    BoolConfigField enableGesturesToScroll;
 
     QKeySequence keyNext[3];
     QKeySequence keyPrevious[3];

@@ -55,7 +55,7 @@ void IconButton::setSwitched(bool switched) {
 void IconButton::paint(QPainter & painter)  {
     painter.setRenderHint(QPainter::Antialiasing, true);
     painter.setPen(Qt::NoPen);
-    painter.setBrush(_config.buttonsBackgroundColor);
+    painter.setBrush(_config.buttonsBackgroundColor());
 
     const float backgroundRadius = _radius * (_scale / 3.0 + 0.65);
     painter.drawEllipse(_center(), backgroundRadius, backgroundRadius);

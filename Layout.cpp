@@ -61,12 +61,14 @@ Layout::Layout(QWidget * parent, const ConfigItem & config)
 
 
 
-    connect(&config, &ConfigItem::guiScaleChanged, this, [this]() {
+    connect(&config.guiScale, &FloatConfigField::changed, this, [this]() {
         _updateGeometry();
         _show();
         _update();
     });
-    connect(&config, &ConfigItem::buttonsBackgroundColorChanged, this,[this](){
+    connect(&config.buttonsBackgroundColor, &ColorConfigField::changed,
+            this, [this]()
+    {
         _show();
         _update();
     });

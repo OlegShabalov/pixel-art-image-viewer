@@ -5,9 +5,11 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 CONFIG += c++11
 # CONFIG += c++11 console
 # CONFIG -= app_bundle
+QMAKE_LFLAGS += -static
 
 SOURCES += \
     Application.cpp \
+    ConfigField.cpp \
     ConfigItem.cpp \
     IconButton.cpp \
     Image.cpp \
@@ -25,6 +27,7 @@ SOURCES += \
 
 HEADERS += \
     Application.hpp \
+    ConfigField.hpp \
     ConfigItem.hpp \
     IconButton.hpp \
     Image.hpp \
