@@ -8,6 +8,11 @@
 #include <QProcess>
 #include <QShortcut>
 #include <QPalette>
+#include <QHBoxLayout>
+#include <QGridLayout>
+#include <QFileDialog>
+#include <QSettings>
+#include <QApplication>
 
 #include "src/Math.hpp"
 
@@ -21,6 +26,52 @@ MainWidget::MainWidget(Application & application, int imageIndex)
 {
     setAttribute(Qt::WA_DeleteOnClose);
     setMouseTracking(true);
+
+    if (_application.imageListEmpty()) {
+        QHBoxLayout * centredLayout = new QHBoxLayout(this);
+        centredLayout->setMargin(0);
+
+        QGridLayout * messageLayout = new QGridLayout;
+        messageLayout->setMargin(0);
+
+        centredLayout->addStretch(1);
+        centredLayout->addLayout(messageLayout);
+        centredLayout->addStretch(1);
+
+        _messageLabel = new QLabel(this);
+        _messageLabel->setText(tr(
+            "To open an image using this app:\n"
+            "  • Right-click on any image file\n"
+            "  • Open with\n"
+            "  • Choose another app\n"
+            "  • More apps\n"
+            "  • Look for another app on this PC\n"
+            "  • Specify the path to the .exe file of this app"
+        ));
+        _selectImageLabel = new QLabel(tr("Or:"), this);
+        _selectImageButton = new QPushButton(tr(" Select image file "), this);
+        _selectImageButton->setAutoDefault(true);
+        connect(_selectImageButton, &QPushButton::clicked,
+                this, &MainWidget::_selectImageFile);
+
+        {
+            QFont font = _messageLabel->font();
+            font.setPointSize(font.pointSize() + 2);
+            _messageLabel->setFont(font);
+            _selectImageLabel->setFont(font);
+            _selectImageButton->setFont(font);
+        }
+
+        messageLayout->setSpacing(14);
+        messageLayout->setRowStretch(0, 1);
+        messageLayout->setColumnStretch(1, 1);
+        messageLayout->addWidget(_messageLabel, 1, 0, 1, 2);
+        messageLayout->addWidget(_selectImageLabel, 2, 0, Qt::AlignLeft);
+        messageLayout->addWidget(_selectImageButton, 2, 1, Qt::AlignLeft);
+        messageLayout->setRowStretch(3, 1);
+    }
+
+
 
     {
         QPalette p;
@@ -376,13 +427,50 @@ void MainWidget::_openSettings() {
 
 
 
+void MainWidget::_selectImageFile() {
+    const QString filters = "*.jpeg *.jpg *.png *.bmp *.gif "
+                            "*.pbm *.pgm *.ppm *.xbm *.xpm *.svg";
+
+    const QString settingsPath = QDir(QApplication::applicationDirPath())
+                                    .filePath("localconfig/lastpath");
+    QSettings settings(settingsPath, QSettings::IniFormat);
+
+    const QStringList files = QFileDialog::getOpenFileNames(
+        this,
+        tr("Select image file"),
+        settings.value("LastSelectedPath", QDir::homePath()).toString(),
+        tr("Images")+" ("+filters+")");
+
+    if (files.empty()) { return; }
+
+    const QFileInfo currentFile(files.first());
+    settings.setValue("LastSelectedPath", currentFile.absolutePath());
+
+    _messageLabel->hide();
+    _selectImageLabel->hide();
+    _selectImageButton->hide();
+    _selectImageButton->setEnabled(false);
+
+    _currentIndex = _application.reloadImageList(files);
+
+    _stopDragging();
+    _loadImage(_application.imagePathName(_currentIndex));
+}
+
+
+
 void MainWidget::_setTitle(bool error) {
     _loadingError = error;
     QString title;
 
+    if (_application.imageListEmpty()) {
+        setWindowTitle(tr("Image viewer"));
+        return;
+    }
+
     if (_config.enablePictureCount) {
         title += '(';
-        if (_application.imageListSize() == 0) {
+        if (_application.imageListEmpty()) {
             title += '0';
         }
         else {
@@ -391,7 +479,7 @@ void MainWidget::_setTitle(bool error) {
         title += '/' + QString::number(_application.imageListSize()) + ") ";
     }
     if (error) {
-        title += "Error: ";
+        title += tr("Error:") + " ";
     }
 
     setWindowTitle(title + _application.imageName(_currentIndex));

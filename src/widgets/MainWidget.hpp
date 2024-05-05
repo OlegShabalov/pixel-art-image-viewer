@@ -3,6 +3,8 @@
 
 #include <QWidget>
 #include <QStringList>
+#include <QLabel>
+#include <QPushButton>
 
 #include "src/Image.hpp"
 #include "src/ConfigItem.hpp"
@@ -49,6 +51,7 @@ private Q_SLOTS:
     void _jumpToPreviousFrame();
 
     void _openSettings();
+    void _selectImageFile();
 
 private:
     void _setTitle(bool error);
@@ -79,6 +82,10 @@ private:
     Layout * _layout;
 
     SettingsWidget * _settings = nullptr;
+
+    QLabel * _messageLabel = nullptr;
+    QLabel * _selectImageLabel = nullptr;
+    QPushButton * _selectImageButton = nullptr;
 };
 
 

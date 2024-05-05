@@ -17,7 +17,10 @@ public:
     int nextIndex(int index) const;
     int previousIndex(int index) const;
     inline int imageListSize() const;
-    bool imageListEmpty() const;
+    inline bool imageListEmpty() const;
+
+    int reloadImageList(const QString & filePath);
+    int reloadImageList(const QStringList & filesPath);
 
 private:
     void _loadImageList(const QString & filePath);
@@ -31,6 +34,10 @@ private:
 
 inline int Application::imageListSize() const {
     return _imageNames.size();
+}
+
+inline bool Application::imageListEmpty() const {
+    return _imageNames.empty();
 }
 
 
