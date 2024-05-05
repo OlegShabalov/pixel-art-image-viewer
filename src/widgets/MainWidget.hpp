@@ -50,6 +50,8 @@ private Q_SLOTS:
     void _jumpToNextFrame();
     void _jumpToPreviousFrame();
 
+    void _updateBackgroundColor();
+
     void _openSettings();
     void _selectImageFile();
 

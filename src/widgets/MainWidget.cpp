@@ -73,19 +73,11 @@ MainWidget::MainWidget(Application & application, int imageIndex)
 
 
 
-    {
-        QPalette p;
-        p.setColor(QPalette::Window, _config.windowBackgroundColor());
-        setAutoFillBackground(true);
-        setPalette(p);
-    }
+    setAutoFillBackground(true);
+    _updateBackgroundColor();
+
     connect(&_config.windowBackgroundColor, &ColorConfigField::changed,
-            this, [this]()
-    {
-        QPalette p = palette();
-        p.setColor(QPalette::Window, _config.windowBackgroundColor());
-        setPalette(p);
-    });
+            this, &MainWidget::_updateBackgroundColor);
 
     _layout = new Layout(this, _config);
     connect(_layout->next, &IconButton::clicked,
@@ -416,6 +408,35 @@ void MainWidget::_jumpToPreviousFrame() {
     _current->jumpToPreviousFrame();
     _setPaused(_current->isPaused());
 }
+
+
+
+void MainWidget::_updateBackgroundColor() {
+    QPalette p = palette();
+    p.setColor(QPalette::Window, _config.windowBackgroundColor());
+    setPalette(p);
+
+    if (_messageLabel || _selectImageLabel) {
+        const QColor hsv = _config.windowBackgroundColor().toHsv();
+        const float s = hsv.saturationF();
+        const float v = 1.0f - hsv.valueF();
+
+        const QColor c = (v < 0.4f - s * 0.3f) ? Qt::black : Qt::white;
+
+        if (_messageLabel) {
+            p = _messageLabel->palette();
+            p.setColor(_messageLabel->foregroundRole(), c);
+            _messageLabel->setPalette(p);
+        }
+        if (_selectImageLabel) {
+            p = _selectImageLabel->palette();
+            p.setColor(_selectImageLabel->foregroundRole(), c);
+            _selectImageLabel->setPalette(p);
+        }
+    }
+}
+
+
 
 void MainWidget::_openSettings() {
     if (!_settings) {
