@@ -44,15 +44,15 @@ ConfigItem::ConfigItem()
     , keyPrevious              {Qt::Key_Left,  Qt::Key_A, Qt::Key_J}
     , keyScaleUp               {Qt::Key_Up, Qt::Key_W}
     , keyScaleDown             {Qt::Key_Down, Qt::Key_S}
-    , keyBrowse                {Qt::CTRL + Qt::Key_E}
+    , keyBrowse                {Qt::CTRL | Qt::Key_E}
     , keyChangeFullScreenState {Qt::Key_F}
     , keyScreenStateDown       {Qt::Key_Escape}
     , keyPinOnTop              {Qt::Key_P}
     , keyChangePaused          {Qt::Key_Space, Qt::Key_K}
     , keyNextFrame             {Qt::Key_Period}
     , keyPreviousFrame         {Qt::Key_Comma}
-    , keyClose                 {Qt::CTRL + Qt::Key_Q}
-    , keySettings              {Qt::CTRL + Qt::Key_I}
+    , keyClose                 {Qt::CTRL | Qt::Key_Q}
+    , keySettings              {Qt::CTRL | Qt::Key_I}
 {  }
 
 ConfigItem::ConfigItem(const QString & settingsFile)

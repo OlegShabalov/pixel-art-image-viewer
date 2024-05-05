@@ -29,10 +29,10 @@ MainWidget::MainWidget(Application & application, int imageIndex)
 
     if (_application.imageListEmpty()) {
         QHBoxLayout * centredLayout = new QHBoxLayout(this);
-        centredLayout->setMargin(0);
+        centredLayout->setContentsMargins(0, 0, 0, 0);
 
         QGridLayout * messageLayout = new QGridLayout;
-        messageLayout->setMargin(0);
+        messageLayout->setContentsMargins(0, 0, 0, 0);
 
         centredLayout->addStretch(1);
         centredLayout->addLayout(messageLayout);
@@ -165,7 +165,13 @@ void MainWidget::mousePressEvent(QMouseEvent * event) {
         if (_current->loaded() && !_isDraggingImage) {
             _isDraggingImage = true;
             _wasDragging = false;
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
             _imageDragOffset = _current->pos() - event->screenPos();
+#else
+            _imageDragOffset = _current->pos() - event->scenePosition();
+#endif
+
             event->accept();
             return;
         }
@@ -220,7 +226,13 @@ void MainWidget::mouseMoveEvent(QMouseEvent * event) {
             _draggingCursorEnable = true;
         }
         _wasDragging = true;
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
         _current->moveTo(event->screenPos() + _imageDragOffset);
+#else
+        _current->moveTo(event->scenePosition() + _imageDragOffset);
+#endif
+
         _layout->wasInteraction();
         update();
         event->accept();
@@ -233,7 +245,11 @@ void MainWidget::mouseMoveEvent(QMouseEvent * event) {
     event->ignore();
 }
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 void MainWidget::enterEvent(QEvent * event) {
+#else
+void MainWidget::enterEvent(QEnterEvent * event) {
+#endif
     _layout->mouseEnter(mapFromGlobal(QCursor::pos()));
     QWidget::enterEvent(event);
 }

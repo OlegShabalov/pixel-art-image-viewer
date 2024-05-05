@@ -26,6 +26,7 @@ SettingsWidget::SettingsWidget(QWidget * parentWindow, ConfigItem & config)
 
     _menu = new QListWidget(this);
     _menu->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+    _menu->setFrameShape(QFrame::Box);
 
     layout->addWidget(_menu, 1, 0);
 

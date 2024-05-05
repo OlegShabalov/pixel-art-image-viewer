@@ -11,7 +11,7 @@ WindowPage::WindowPage(ConfigItem & config)
     : _config(config)
 {
     QVBoxLayout * mainLayout = new QVBoxLayout(this);
-    mainLayout->setMargin(0);
+    mainLayout->setContentsMargins(0, 0, 0, 0);
     QWidget * content = new QWidget;
 
 
