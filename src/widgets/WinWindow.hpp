@@ -56,6 +56,7 @@ private:
     bool _isProblemGeometryEvent = false;
     bool _isProblemFullscreenChangeEvent = false;
     bool _ignoreMaximizedEvent = false;
+    bool _ignoreSettingVisible = false;
 };
 
 

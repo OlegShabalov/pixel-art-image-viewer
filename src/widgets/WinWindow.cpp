@@ -114,12 +114,13 @@ bool WinWindow::setKeepOnTopMode(bool enable) {
 }
 
 void WinWindow::setVisible(bool visible) {
-    const bool v = isVisible();
-    QWidget::setVisible(visible);
+    if (_ignoreSettingVisible) return;
 
-    if (visible && !v && !isMinimized()) {
+    if (visible && !isVisible() && !isMinimized()) {
         _loadGeometry();
     }
+
+    QWidget::setVisible(visible);
 }
 
 
@@ -194,7 +195,10 @@ void WinWindow::_loadGeometry() {
             reinterpret_cast<const WINDOWPLACEMENT *>(ba.constData());
 
         if (placement->showCmd == SW_SHOWMAXIMIZED) {
+            _ignoreSettingVisible = true;
             showMaximized();
+            _ignoreSettingVisible = false;
+            QWidget::setVisible(true);
         }
 
         SetWindowPlacement(HWND(winId()), placement);
